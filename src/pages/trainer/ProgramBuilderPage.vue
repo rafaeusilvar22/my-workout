@@ -32,97 +32,99 @@
           </div>
         </div>
 
-        <!-- Splits da fase -->
-        <q-expansion-item
-          v-for="split in phase.training_splits"
-          :key="split.id"
-          expand-separator
-          header-class="bg-grey-1"
-          class="q-mb-sm rounded-borders split-expansion"
-          :style="{ borderLeft: `4px solid ${split.color || '#1976d2'}` }"
+        <!-- Splits da fase (draggable) -->
+        <draggable
+          :list="phase.training_splits"
+          item-key="id"
+          handle=".split-drag-handle"
+          ghost-class="drag-ghost"
+          @end="handleSplitsReorder(phase)"
         >
-          <!-- Header customizado com cor + nome + botão editar -->
-          <template #header>
-            <q-item-section avatar>
-              <q-btn
-                round unelevated dense size="sm"
-                :style="{ background: split.color || '#1976d2' }"
-                icon="palette"
-                text-color="white"
-                @click.stop="openEditSplitColor(split)"
-              />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-weight-bold">{{ split.name }}</q-item-label>
-              <q-item-label caption>{{ split.description }}</q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-btn flat round dense icon="delete" size="xs" color="negative"
-                @click.stop="handleDeleteSplit(split)" />
-            </q-item-section>
-          </template>
+          <template #item="{ element: split }">
+            <q-expansion-item
+              expand-separator
+              header-class="bg-grey-1"
+              class="q-mb-sm rounded-borders split-expansion"
+              :style="{ borderLeft: `4px solid ${split.color || '#1976d2'}` }"
+            >
+              <template #header>
+                <q-item-section side style="min-width: 24px; padding-right: 4px;">
+                  <q-icon name="drag_indicator" class="split-drag-handle cursor-grab" color="grey-4" size="20px" />
+                </q-item-section>
+                <q-item-section avatar>
+                  <q-btn
+                    round unelevated dense size="sm"
+                    :style="{ background: split.color || '#1976d2' }"
+                    icon="palette"
+                    text-color="white"
+                    @click.stop="openEditSplitColor(split)"
+                  />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label class="text-weight-bold">{{ split.name }}</q-item-label>
+                  <q-item-label caption>{{ split.description }}</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <q-btn flat round dense icon="delete" size="xs" color="negative"
+                    @click.stop="handleDeleteSplit(split)" />
+                </q-item-section>
+              </template>
 
-          <q-card flat>
-            <q-card-section class="q-pa-sm">
-              <q-list dense>
-                <template v-for="(group, gi) in groupedSplitExercises(split)" :key="group.key">
-                  <!-- Bi-set: header + q-items diretos no q-list -->
-                  <template v-if="group.superset">
-                    <div class="row items-center q-px-xs q-pt-xs q-pb-none">
-                      <q-icon name="swap_vert" size="11px" color="orange" class="q-mr-xs" />
-                      <span class="text-caption text-orange text-weight-bold" style="font-size: 10px;">BI-SET {{ gi + 1 }}</span>
-                    </div>
-                    <q-item
-                      v-for="(se, si) in group.items"
-                      :key="se.id"
-                      class="q-pa-xs biset-item"
-                      :class="{ 'biset-item--last': si === group.items.length - 1 }"
+              <q-card flat>
+                <q-card-section class="q-pa-sm">
+                  <q-list>
+                    <draggable
+                      :list="split.split_exercises"
+                      item-key="id"
+                      handle=".ex-drag-handle"
+                      ghost-class="drag-ghost"
+                      @end="handleExercisesReorder(split)"
                     >
-                      <q-item-section side class="q-pr-xs" style="min-width: 26px; justify-content: center;">
-                        <span class="text-weight-bold text-orange" style="font-size: 11px;">
-                          {{ gi + 1 }}{{ 'ABCDEFGH'[si] }}
-                        </span>
-                      </q-item-section>
-                      <q-item-section>
-                        <q-item-label class="text-weight-medium text-body2">{{ se.exercises?.name }}</q-item-label>
-                        <q-item-label caption>{{ se.sets }}x{{ se.reps }} · {{ se.rest_seconds }}s descanso</q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                        <div class="row q-gutter-xs">
-                          <q-btn flat round dense icon="edit" size="xs" color="grey-6" @click="openEditExercise(se)" />
-                          <q-btn flat round dense icon="close" size="xs" color="negative" @click="handleRemoveExercise(se)" />
+                      <template #item="{ element: se, index: si }">
+                        <div>
+                          <div
+                            v-if="se.superset_group && (si === 0 || split.split_exercises[si - 1]?.superset_group !== se.superset_group)"
+                            class="row items-center q-px-xs q-pt-xs q-pb-none"
+                          >
+                            <q-icon name="swap_vert" size="11px" color="orange" class="q-mr-xs" />
+                            <span class="text-caption text-orange text-weight-bold" style="font-size: 10px;">BI-SET</span>
+                          </div>
+                          <q-item
+                            dense class="q-pa-xs"
+                            :class="[
+                              se.superset_group ? 'biset-item' : '',
+                              se.superset_group && (!split.split_exercises[si + 1] || split.split_exercises[si + 1]?.superset_group !== se.superset_group) ? 'biset-item--last' : ''
+                            ]"
+                          >
+                            <q-item-section side style="min-width: 20px; padding-right: 4px;">
+                              <q-icon name="drag_indicator" class="ex-drag-handle cursor-grab" color="grey-4" size="16px" />
+                            </q-item-section>
+                            <q-item-section>
+                              <q-item-label class="text-weight-medium text-body2">{{ se.exercises?.name }}</q-item-label>
+                              <q-item-label caption>{{ se.sets }}x{{ se.reps }} · {{ se.rest_seconds }}s descanso</q-item-label>
+                            </q-item-section>
+                            <q-item-section side>
+                              <div class="row q-gutter-xs">
+                                <q-btn flat round dense icon="edit" size="xs" color="grey-6" @click="openEditExercise(se)" />
+                                <q-btn flat round dense icon="close" size="xs" color="negative" @click="handleRemoveExercise(se)" />
+                              </div>
+                            </q-item-section>
+                          </q-item>
                         </div>
-                      </q-item-section>
-                    </q-item>
-                  </template>
+                      </template>
+                    </draggable>
+                  </q-list>
 
-                  <!-- Exercício normal -->
-                  <q-item v-else class="q-pa-xs">
-                    <q-item-section side class="q-pr-xs" style="min-width: 26px; justify-content: center;">
-                      <span class="text-weight-bold text-grey-5" style="font-size: 11px;">{{ gi + 1 }}</span>
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label class="text-weight-medium text-body2">{{ group.items[0].exercises?.name }}</q-item-label>
-                      <q-item-label caption>{{ group.items[0].sets }}x{{ group.items[0].reps }} · {{ group.items[0].rest_seconds }}s descanso</q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                      <div class="row q-gutter-xs">
-                        <q-btn flat round dense icon="edit" size="xs" color="grey-6" @click="openEditExercise(group.items[0])" />
-                        <q-btn flat round dense icon="close" size="xs" color="negative" @click="handleRemoveExercise(group.items[0])" />
-                      </div>
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-list>
-
-              <q-btn
-                flat color="primary" icon="add" label="Adicionar exercício"
-                size="sm" class="q-mt-sm"
-                @click="openAddExercise(split, phase)"
-              />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+                  <q-btn
+                    flat color="primary" icon="add" label="Adicionar exercício"
+                    size="sm" class="q-mt-sm"
+                    @click="openAddExercise(split, phase)"
+                  />
+                </q-card-section>
+              </q-card>
+            </q-expansion-item>
+          </template>
+        </draggable>
 
         <q-btn
           v-if="phase.training_splits?.length === 0"
@@ -317,6 +319,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
+import draggable from 'vuedraggable'
 import { useProgramsStore } from 'src/stores/programs'
 import { useExercisesStore } from 'src/stores/exercises'
 
@@ -371,23 +374,16 @@ function filterExercises(val, update) {
   })
 }
 
-function groupedSplitExercises(split) {
-  const sorted = [...(split.split_exercises || [])].sort((a, b) => a.order_index - b.order_index)
-  const groups = []
-  const seen = new Map()
-  for (const se of sorted) {
-    if (se.superset_group) {
-      if (seen.has(se.superset_group)) {
-        groups[seen.get(se.superset_group)].items.push(se)
-      } else {
-        seen.set(se.superset_group, groups.length)
-        groups.push({ superset: true, key: `ss-${se.superset_group}-${split.id}`, items: [se] })
-      }
-    } else {
-      groups.push({ superset: false, key: se.id, items: [se] })
-    }
-  }
-  return groups
+async function handleSplitsReorder(phase) {
+  const updates = phase.training_splits.map((s, idx) => ({ id: s.id, order_index: idx }))
+  const { error } = await programsStore.updateSplitOrders(updates)
+  if (error) $q.notify({ type: 'negative', message: error.message })
+}
+
+async function handleExercisesReorder(split) {
+  const updates = split.split_exercises.map((se, idx) => ({ id: se.id, order_index: idx }))
+  const { error } = await programsStore.updateExerciseOrders(updates)
+  if (error) $q.notify({ type: 'negative', message: error.message })
 }
 
 function openAddSplit(phase) {
@@ -496,6 +492,7 @@ async function handleAddSplit() {
     name: splitForm.value.name,
     description: splitForm.value.description,
     color: splitForm.value.color,
+    order_index: selectedPhase.value.training_splits?.length || 0,
   })
   savingSplit.value = false
   if (error) {
@@ -590,5 +587,15 @@ onMounted(async () => {
 }
 .biset-item--last {
   margin-bottom: 4px;
+}
+.drag-ghost {
+  opacity: 0.4;
+  background: #e3f2fd;
+}
+.cursor-grab {
+  cursor: grab;
+}
+.cursor-grab:active {
+  cursor: grabbing;
 }
 </style>

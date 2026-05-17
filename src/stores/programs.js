@@ -49,7 +49,16 @@ export const useProgramsStore = defineStore('programs', () => {
       `)
       .eq('id', programId)
       .single()
-    if (!error) currentProgram.value = data
+    if (!error && data) {
+      data.program_phases?.sort((a, b) => a.order_index - b.order_index)
+      for (const phase of data.program_phases || []) {
+        phase.training_splits?.sort((a, b) => a.order_index - b.order_index)
+        for (const split of phase.training_splits || []) {
+          split.split_exercises?.sort((a, b) => a.order_index - b.order_index)
+        }
+      }
+      currentProgram.value = data
+    }
     loading.value = false
     return { data, error }
   }
@@ -106,6 +115,26 @@ export const useProgramsStore = defineStore('programs', () => {
     return { data, error }
   }
 
+  async function updateSplitOrders(updates) {
+    const results = await Promise.all(
+      updates.map(({ id, order_index }) =>
+        supabase.from('training_splits').update({ order_index }).eq('id', id)
+      )
+    )
+    const error = results.find(r => r.error)?.error || null
+    return { error }
+  }
+
+  async function updateExerciseOrders(updates) {
+    const results = await Promise.all(
+      updates.map(({ id, order_index }) =>
+        supabase.from('split_exercises').update({ order_index }).eq('id', id)
+      )
+    )
+    const error = results.find(r => r.error)?.error || null
+    return { error }
+  }
+
   async function updateSplit(id, payload) {
     const { data, error } = await supabase
       .from('training_splits')
@@ -145,7 +174,7 @@ export const useProgramsStore = defineStore('programs', () => {
     fetchAthletes, fetchTrainerPrograms, fetchProgramFull,
     createProgram, createPhase, createSplit,
     addExerciseToSplit, removeExerciseFromSplit,
-    updateSplitExercise, updateSplit,
+    updateSplitExercise, updateSplit, updateSplitOrders, updateExerciseOrders,
     deleteSplit, deletePhase, updateAthleteProfile,
   }
 })
