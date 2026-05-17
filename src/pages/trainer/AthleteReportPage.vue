@@ -296,16 +296,18 @@ const measurementsSeries = computed(() => {
 })
 
 const measurementsChartOptions = {
-  chart: { type: 'line', toolbar: { show: false }, zoom: { enabled: false } },
+  chart: { type: 'line', toolbar: { show: false }, zoom: { enabled: false }, background: 'transparent', foreColor: 'rgba(255,255,255,0.7)' },
+  theme: { mode: 'dark' },
   stroke: { curve: 'smooth', width: 2 },
-  colors: ['#F57C00', '#ef5350', '#42a5f5'],
+  colors: ['#00E676', '#00D4FF', '#FF6B00'],
   xaxis: { type: 'datetime' },
   yaxis: [
     { title: { text: 'kg' }, decimalsInFloat: 1 },
     { opposite: true, title: { text: '%' }, decimalsInFloat: 1 },
     { show: false },
   ],
-  tooltip: { x: { format: 'dd/MM/yy' } },
+  grid: { borderColor: 'rgba(255,255,255,0.08)' },
+  tooltip: { x: { format: 'dd/MM/yy' }, theme: 'dark' },
   legend: { position: 'top' },
 }
 
@@ -331,12 +333,15 @@ const weeklyFrequency = computed(() => {
 })
 
 const frequencyChartOptions = computed(() => ({
-  chart: { type: 'bar', toolbar: { show: false } },
-  colors: ['#F57C00'],
+  chart: { type: 'bar', toolbar: { show: false }, background: 'transparent', foreColor: 'rgba(255,255,255,0.7)' },
+  theme: { mode: 'dark' },
+  colors: ['#00E676'],
   xaxis: { categories: weeklyFrequency.value.map((_, i) => `Sem ${i + 1}`) },
   yaxis: { min: 0, decimalsInFloat: 0, title: { text: 'Sessões' } },
+  grid: { borderColor: 'rgba(255,255,255,0.08)' },
   plotOptions: { bar: { borderRadius: 4 } },
   dataLabels: { enabled: false },
+  tooltip: { theme: 'dark' },
 }))
 
 const frequencySeries = computed(() => ([
@@ -361,12 +366,14 @@ const exerciseOptions = computed(() => {
 })
 
 const progressChartOptions = {
-  chart: { type: 'line', toolbar: { show: false }, zoom: { enabled: false } },
+  chart: { type: 'line', toolbar: { show: false }, zoom: { enabled: false }, background: 'transparent', foreColor: 'rgba(255,255,255,0.7)' },
+  theme: { mode: 'dark' },
   stroke: { curve: 'smooth', width: 2 },
-  colors: ['#F57C00'],
+  colors: ['#00E676'],
   xaxis: { type: 'datetime' },
   yaxis: { title: { text: 'kg' }, decimalsInFloat: 1 },
-  tooltip: { x: { format: 'dd/MM/yy' } },
+  grid: { borderColor: 'rgba(255,255,255,0.08)' },
+  tooltip: { x: { format: 'dd/MM/yy' }, theme: 'dark' },
   markers: { size: 4 },
 }
 

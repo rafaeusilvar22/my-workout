@@ -202,8 +202,8 @@ const legendSplits = computed(() => {
   justify-content: center;
   font-size: 13px;
   font-weight: 500;
-  color: #555;
-  background: #f0f0f0;
+  color: rgba(255, 255, 255, 0.45);
+  background: #1A1A2C;
   transition: opacity 0.15s;
   user-select: none;
 }
@@ -223,8 +223,8 @@ const legendSplits = computed(() => {
   opacity: 0.85;
 }
 .cal-day--closed {
-  background: #fce8e8;
-  color: #e57373;
+  background: rgba(255, 71, 87, 0.1);
+  color: rgba(255, 71, 87, 0.7);
 }
 .legend-dot {
   width: 10px;

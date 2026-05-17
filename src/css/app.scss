@@ -1,1 +1,38 @@
 // app global css
+
+body {
+  background: #0C0C14;
+}
+
+.body--dark {
+  // Quasar grey utility classes don't auto-flip in dark mode
+  .bg-grey-1 { background: #1A1A2C !important; }
+  .bg-grey-2 { background: #1C1C30 !important; }
+  .bg-grey-3 { background: #222238 !important; }
+  .text-grey-5 { color: rgba(255, 255, 255, 0.35) !important; }
+  .text-grey-6 { color: rgba(255, 255, 255, 0.45) !important; }
+  .text-grey-7 { color: rgba(255, 255, 255, 0.55) !important; }
+
+  // Subtle card border
+  .q-card {
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  // Metric chips (pastel backgrounds → dark tint)
+  .bg-blue-1   { background: rgba(0, 212, 255, 0.12) !important; }
+  .bg-green-1  { background: rgba(0, 230, 118, 0.12) !important; }
+  .bg-orange-1 { background: rgba(255, 107, 0, 0.12) !important; }
+  .bg-purple-1 { background: rgba(156, 39, 176, 0.12) !important; }
+  .bg-red-1    { background: rgba(255, 71, 87, 0.12) !important; }
+  .text-blue-9   { color: #00D4FF !important; }
+  .text-green-9  { color: #00E676 !important; }
+  .text-orange-9 { color: #FF6B00 !important; }
+  .text-purple-9 { color: #CE93D8 !important; }
+  .text-red-8    { color: #FF4757 !important; }
+
+  // Drag ghost
+  .drag-ghost { background: rgba(0, 230, 118, 0.1) !important; }
+
+  // Expansion item header class used in ProgramBuilder
+  .bg-dark-elevated { background: #1A1A2C; }
+}

@@ -1,11 +1,11 @@
 <template>
   <q-layout view="lHh lpr lFf">
-    <q-header elevated class="bg-primary">
+    <q-header class="bg-dark" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
       <q-toolbar>
-        <q-icon name="fitness_center" size="28px" class="q-mr-sm" />
-        <q-toolbar-title class="text-weight-bold">My Workout</q-toolbar-title>
+        <q-icon name="fitness_center" size="28px" class="q-mr-sm text-primary" />
+        <q-toolbar-title class="text-weight-bold text-primary">My Workout</q-toolbar-title>
         <q-space />
-        <q-btn flat dense round icon="logout" @click="handleLogout" />
+        <q-btn flat dense round icon="logout" class="text-white" @click="handleLogout" />
       </q-toolbar>
     </q-header>
 
@@ -13,7 +13,7 @@
       <router-view />
     </q-page-container>
 
-    <q-footer style="background: #fff; border-top: 1px solid #eee;">
+    <q-footer class="bg-dark athlete-footer">
       <q-tabs
         active-color="primary"
         indicator-color="primary"
@@ -43,8 +43,11 @@ async function handleLogout() {
 </script>
 
 <style>
+.athlete-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
 .athlete-tabs .q-tab {
-  color: #9e9e9e !important;
+  color: rgba(255, 255, 255, 0.4) !important;
 }
 .athlete-tabs .q-tab--active {
   color: var(--q-primary) !important;

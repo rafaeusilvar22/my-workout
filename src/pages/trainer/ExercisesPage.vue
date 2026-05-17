@@ -276,7 +276,7 @@ onMounted(() => exercisesStore.fetchAll())
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   flex-shrink: 0;
 }
 

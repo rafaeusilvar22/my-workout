@@ -251,10 +251,10 @@ onMounted(async () => {
 }
 .day-btn--active {
   background: var(--q-primary);
-  color: #fff;
+  color: #0C0C14;
 }
 .day-btn--inactive {
-  background: #f0f0f0;
-  color: #9e9e9e;
+  background: #1A1A2C;
+  color: rgba(255, 255, 255, 0.3);
 }
 </style>

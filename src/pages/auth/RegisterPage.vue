@@ -1,6 +1,6 @@
 <template>
-  <q-page class="flex flex-center bg-grey-1">
-    <q-card class="register-card q-pa-lg shadow-4">
+  <q-page class="flex flex-center">
+    <q-card class="register-card q-pa-lg bg-dark" style="border: 1px solid rgba(255,255,255,0.1);">
       <q-card-section class="text-center q-pb-sm">
         <q-icon name="fitness_center" size="48px" color="primary" />
         <div class="text-h5 text-weight-bold q-mt-sm">Criar Conta</div>
@@ -58,10 +58,10 @@
               ]"
               spread
               unelevated
-              color="grey-3"
-              text-color="grey-7"
+              color="dark"
+              text-color="grey-5"
               toggle-color="primary"
-              toggle-text-color="white"
+              toggle-text-color="dark"
               class="full-width"
             />
           </div>

@@ -350,8 +350,8 @@ const selectedPhase = ref(null)
 const splitForm = ref({ name: '', description: '', color: '#1976d2' })
 
 const colorOptions = [
-  '#1976d2', '#43a047', '#e53935', '#fb8c00',
-  '#8e24aa', '#00897b', '#d81b60', '#6d4c41',
+  '#00D4FF', '#00E676', '#FF6B00', '#FF4757',
+  '#7C4DFF', '#FFD32A', '#FF6B9D', '#00BCD4',
 ]
 
 // Edit exercise inline
@@ -641,7 +641,7 @@ onMounted(async () => {
   overflow: hidden;
 }
 .biset-item {
-  border-left: 3px solid #fb8c00;
+  border-left: 3px solid var(--q-accent);
   border-radius: 0 4px 4px 0;
   padding-left: 8px !important;
   margin-bottom: 1px;

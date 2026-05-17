@@ -1,6 +1,6 @@
 <template>
-  <q-page class="flex flex-center bg-grey-1">
-    <q-card class="login-card q-pa-lg shadow-4">
+  <q-page class="flex flex-center">
+    <q-card class="login-card q-pa-lg bg-dark" style="border: 1px solid rgba(255,255,255,0.1);">
       <q-card-section class="text-center q-pb-sm">
         <q-icon name="fitness_center" size="48px" color="primary" />
         <div class="text-h5 text-weight-bold q-mt-sm">My Workout</div>

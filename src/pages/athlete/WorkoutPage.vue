@@ -44,7 +44,7 @@
           flat bordered
           class="q-mb-sm"
           :class="{ 'border-done': isGroupDone(group) }"
-          style="border-left: 3px solid #fb8c00;"
+          style="border-left: 3px solid var(--q-accent);"
         >
           <div class="row items-center q-px-md q-pt-sm q-pb-none">
             <q-icon name="swap_vert" size="14px" color="orange" class="q-mr-xs" />
@@ -399,7 +399,7 @@ onUnmounted(() => clearInterval(timer))
 
 <style scoped>
 .border-done {
-  border-color: #4caf50 !important;
+  border-color: var(--q-primary) !important;
 }
 
 .exercise-thumb {
@@ -408,7 +408,7 @@ onUnmounted(() => clearInterval(timer))
   object-fit: cover;
   border-radius: 6px;
   cursor: pointer;
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   flex-shrink: 0;
 }
 
