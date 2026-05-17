@@ -1,8 +1,8 @@
 {
   "name": "my-workout",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar App",
+  "description": "A workout tracking application built with Quasar Framework and Vue.js",
+  "productName": "My Workout",
   "author": "Rafael Silva <rafaelsilvar74@gmail.com>",
   "type": "module",
   "private": true,
@@ -15,26 +15,29 @@
     "postinstall": "quasar prepare"
   },
   "dependencies": {
-    "vue-i18n": "^11.3.0",
-    "pinia": "^3.0.1",
     "@quasar/extras": "^1.16.4",
+    "@supabase/supabase-js": "^2.105.4",
+    "apexcharts": "^5.12.0",
+    "pinia": "^3.0.1",
     "quasar": "^2.16.0",
     "vue": "^3.5.22",
-    "vue-router": "^5.0.3"
+    "vue-i18n": "^11.3.0",
+    "vue-router": "^5.0.3",
+    "vue3-apexcharts": "^1.11.1"
   },
   "devDependencies": {
-    "@intlify/unplugin-vue-i18n": "^11.0.0",
     "@eslint/js": "^9.39.4",
+    "@intlify/unplugin-vue-i18n": "^11.0.0",
+    "@quasar/app-vite": "^2.5.1",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "autoprefixer": "^10.4.27",
     "eslint": "^9.39.4",
     "eslint-plugin-vue": "^10.8.0",
     "globals": "^17.4.0",
-    "vite-plugin-checker": "^0.12.0",
-    "vue-eslint-parser": "^10.4.0",
-    "@vue/eslint-config-prettier": "^10.2.0",
+    "postcss": "^8.5.8",
     "prettier": "^3.8.1",
-    "@quasar/app-vite": "^2.5.1",
-    "autoprefixer": "^10.4.27",
-    "postcss": "^8.5.8"
+    "vite-plugin-checker": "^0.12.0",
+    "vue-eslint-parser": "^10.4.0"
   },
   "engines": {
     "node": "^28 || ^26 || ^24 || ^22.12",

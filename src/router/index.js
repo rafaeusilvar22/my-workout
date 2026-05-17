@@ -33,5 +33,33 @@ export default defineRouter((/* { store, ssrContext } */) => {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   })
 
+  Router.beforeEach(async (to) => {
+    // Lazy-load the auth store only when needed (avoids circular dep at module init)
+    const { useAuthStore } = await import('src/stores/auth')
+    const authStore = useAuthStore()
+
+    if (!authStore.user) {
+      await authStore.init()
+    }
+
+    const isAuthRoute = to.path.startsWith('/auth')
+
+    if (!authStore.user && !isAuthRoute) {
+      return '/auth/login'
+    }
+
+    if (authStore.user && isAuthRoute) {
+      return authStore.isTrainer ? '/trainer/dashboard' : '/athlete/home'
+    }
+
+    if (authStore.profile?.role === 'athlete' && to.path.startsWith('/trainer')) {
+      return '/athlete/home'
+    }
+
+    if (authStore.profile?.role === 'trainer' && to.path.startsWith('/athlete')) {
+      return '/trainer/dashboard'
+    }
+  })
+
   return Router
 })
