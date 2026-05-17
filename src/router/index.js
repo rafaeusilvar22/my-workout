@@ -5,6 +5,7 @@ import {
   createWebHistory,
   createWebHashHistory,
 } from 'vue-router'
+import { useAuthStore } from 'src/stores/auth'
 import routes from './routes'
 
 /*
@@ -33,14 +34,8 @@ export default defineRouter((/* { store, ssrContext } */) => {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   })
 
-  Router.beforeEach(async (to) => {
-    // Lazy-load the auth store only when needed (avoids circular dep at module init)
-    const { useAuthStore } = await import('src/stores/auth')
+  Router.beforeEach((to) => {
     const authStore = useAuthStore()
-
-    if (!authStore.user) {
-      await authStore.init()
-    }
 
     const isAuthRoute = to.path.startsWith('/auth')
 

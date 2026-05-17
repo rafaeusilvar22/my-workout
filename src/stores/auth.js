@@ -70,13 +70,13 @@ export const useAuthStore = defineStore('auth', () => {
       await fetchProfile(data.session.user.id)
     }
 
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        user.value = session.user
-        await fetchProfile(session.user.id)
-      } else {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
         user.value = null
         profile.value = null
+      } else if (session?.user) {
+        user.value = session.user
+        fetchProfile(session.user.id)
       }
     })
   }

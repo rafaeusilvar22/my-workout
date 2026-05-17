@@ -74,30 +74,36 @@
                 <q-card-section class="q-pa-sm">
                   <q-list>
                     <draggable
-                      :list="split.split_exercises"
-                      item-key="id"
+                      :list="exerciseGroupsMap[split.id] || []"
+                      item-key="key"
                       handle=".ex-drag-handle"
                       ghost-class="drag-ghost"
-                      @end="handleExercisesReorder(split)"
+                      @end="handleGroupsReorder(split)"
                     >
-                      <template #item="{ element: se, index: si }">
+                      <template #item="{ element: group }">
                         <div>
-                          <div
-                            v-if="se.superset_group && (si === 0 || split.split_exercises[si - 1]?.superset_group !== se.superset_group)"
-                            class="row items-center q-px-xs q-pt-xs q-pb-none"
-                          >
+                          <div v-if="group.superset" class="row items-center q-px-xs q-pt-xs q-pb-none">
                             <q-icon name="swap_vert" size="11px" color="orange" class="q-mr-xs" />
                             <span class="text-caption text-orange text-weight-bold" style="font-size: 10px;">BI-SET</span>
                           </div>
                           <q-item
+                            v-for="(se, si) in group.items"
+                            :key="se.id"
                             dense class="q-pa-xs"
                             :class="[
-                              se.superset_group ? 'biset-item' : '',
-                              se.superset_group && (!split.split_exercises[si + 1] || split.split_exercises[si + 1]?.superset_group !== se.superset_group) ? 'biset-item--last' : ''
+                              group.superset ? 'biset-item' : '',
+                              group.superset && si === group.items.length - 1 ? 'biset-item--last' : ''
                             ]"
                           >
                             <q-item-section side style="min-width: 20px; padding-right: 4px;">
-                              <q-icon name="drag_indicator" class="ex-drag-handle cursor-grab" color="grey-4" size="16px" />
+                              <q-icon
+                                v-if="si === 0"
+                                name="drag_indicator"
+                                class="ex-drag-handle cursor-grab"
+                                color="grey-4"
+                                size="16px"
+                              />
+                              <div v-else style="width: 16px;" />
                             </q-item-section>
                             <q-item-section>
                               <q-item-label class="text-weight-medium text-body2">{{ se.exercises?.name }}</q-item-label>
@@ -316,7 +322,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import draggable from 'vuedraggable'
@@ -367,12 +373,60 @@ const selectedSplit = ref(null)
 const exerciseForm = ref({ exercise: null, sets: 3, reps: '8-12', rest_seconds: 60, notes: '', superset_group: '' })
 const exerciseOptions = ref([])
 
+function usedExerciseIds() {
+  return new Set((selectedSplit.value?.split_exercises || []).map(se => se.exercise_id))
+}
+
+function withDisabled(list) {
+  const used = usedExerciseIds()
+  return list.map(e => used.has(e.id) ? { ...e, disable: true } : e)
+}
+
 function filterExercises(val, update) {
   const q = val.toLowerCase()
   update(() => {
-    exerciseOptions.value = exercisesStore.exercises.filter(e => e.name.toLowerCase().includes(q))
+    exerciseOptions.value = withDisabled(
+      exercisesStore.exercises.filter(e => e.name.toLowerCase().includes(q))
+    )
   })
 }
+
+// exerciseGroupsMap: splitId → groups[], rebuilt whenever currentProgram changes
+const exerciseGroupsMap = ref({})
+
+function buildGroupsForSplit(split) {
+  const sorted = [...(split.split_exercises || [])].sort((a, b) => a.order_index - b.order_index)
+  const groups = []
+  const seen = new Map()
+  for (const se of sorted) {
+    if (se.superset_group) {
+      if (seen.has(se.superset_group)) {
+        groups[seen.get(se.superset_group)].items.push(se)
+      } else {
+        seen.set(se.superset_group, groups.length)
+        groups.push({ superset: true, key: `ss-${se.superset_group}-${split.id}`, items: [se] })
+      }
+    } else {
+      groups.push({ superset: false, key: `ex-${se.id}`, items: [se] })
+    }
+  }
+  return groups
+}
+
+watch(
+  () => programsStore.currentProgram,
+  (program) => {
+    if (!program) return
+    const map = {}
+    for (const phase of program.program_phases || []) {
+      for (const split of phase.training_splits || []) {
+        map[split.id] = buildGroupsForSplit(split)
+      }
+    }
+    exerciseGroupsMap.value = map
+  },
+  { immediate: true, deep: true }
+)
 
 async function handleSplitsReorder(phase) {
   const updates = phase.training_splits.map((s, idx) => ({ id: s.id, order_index: idx }))
@@ -380,8 +434,15 @@ async function handleSplitsReorder(phase) {
   if (error) $q.notify({ type: 'negative', message: error.message })
 }
 
-async function handleExercisesReorder(split) {
-  const updates = split.split_exercises.map((se, idx) => ({ id: se.id, order_index: idx }))
+async function handleGroupsReorder(split) {
+  const groups = exerciseGroupsMap.value[split.id] || []
+  const updates = []
+  let idx = 0
+  for (const group of groups) {
+    for (const se of group.items) {
+      updates.push({ id: se.id, order_index: idx++ })
+    }
+  }
   const { error } = await programsStore.updateExerciseOrders(updates)
   if (error) $q.notify({ type: 'negative', message: error.message })
 }
@@ -396,7 +457,7 @@ function openAddExercise(split, phase) {
   selectedSplit.value = split
   selectedPhase.value = phase
   exerciseForm.value = { exercise: null, sets: 3, reps: '8-12', rest_seconds: 60, notes: '', superset_group: '' }
-  exerciseOptions.value = exercisesStore.exercises
+  exerciseOptions.value = withDisabled(exercisesStore.exercises)
   addExerciseDialog.value = true
 }
 
