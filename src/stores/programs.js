@@ -155,6 +155,25 @@ export const useProgramsStore = defineStore('programs', () => {
     return { error }
   }
 
+  async function uploadAthleteAvatar(athleteId, file) {
+    const ext = file.name.split('.').pop()
+    const path = `${athleteId}.${ext}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(path, file, { upsert: true, contentType: file.type })
+
+    if (uploadError) return { success: false, error: uploadError.message }
+
+    const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+    const avatarUrl = `${data.publicUrl}?t=${Date.now()}`
+
+    const result = await updateAthleteProfile(athleteId, { avatar_url: avatarUrl })
+    if (result.error) return { success: false, error: result.error.message }
+
+    return { success: true }
+  }
+
   async function updateAthleteProfile(athleteId, payload) {
     const { data, error } = await supabase
       .from('profiles')
@@ -175,6 +194,6 @@ export const useProgramsStore = defineStore('programs', () => {
     createProgram, createPhase, createSplit,
     addExerciseToSplit, removeExerciseFromSplit,
     updateSplitExercise, updateSplit, updateSplitOrders, updateExerciseOrders,
-    deleteSplit, deletePhase, updateAthleteProfile,
+    deleteSplit, deletePhase, updateAthleteProfile, uploadAthleteAvatar,
   }
 })

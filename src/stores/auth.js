@@ -81,5 +81,32 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
-  return { user, profile, loading, isTrainer, isAthlete, signIn, signUp, signOut, init, fetchProfile }
+  async function uploadAvatar(file) {
+    const userId = user.value?.id
+    if (!userId) return { success: false, error: 'Não autenticado' }
+
+    const ext = file.name.split('.').pop()
+    const path = `${userId}.${ext}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(path, file, { upsert: true, contentType: file.type })
+
+    if (uploadError) return { success: false, error: uploadError.message }
+
+    const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+    const avatarUrl = `${data.publicUrl}?t=${Date.now()}`
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ avatar_url: avatarUrl })
+      .eq('id', userId)
+
+    if (updateError) return { success: false, error: updateError.message }
+
+    profile.value = { ...profile.value, avatar_url: avatarUrl }
+    return { success: true }
+  }
+
+  return { user, profile, loading, isTrainer, isAthlete, signIn, signUp, signOut, init, fetchProfile, uploadAvatar }
 })

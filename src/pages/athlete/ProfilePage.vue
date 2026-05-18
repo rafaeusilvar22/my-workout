@@ -1,11 +1,29 @@
 <template>
   <q-page class="q-pa-md">
+    <!-- Input de arquivo oculto -->
+    <input
+      ref="fileInput"
+      type="file"
+      accept="image/*"
+      style="display: none"
+      @change="onFileSelected"
+    />
+
     <!-- Card de perfil -->
     <q-card flat bordered class="q-mb-md">
       <q-card-section>
         <div class="row items-center no-wrap q-mb-md">
-          <q-avatar color="primary" text-color="white" size="52px" class="q-mr-md">
-            {{ initials(profile?.full_name) }}
+          <q-avatar size="64px" class="q-mr-md cursor-pointer avatar-wrapper" @click="fileInput.click()">
+            <img v-if="profile?.avatar_url" :src="profile.avatar_url" style="object-fit: cover; width: 100%; height: 100%;" />
+            <template v-else>
+              <q-avatar color="primary" text-color="white" size="64px">
+                {{ initials(profile?.full_name) }}
+              </q-avatar>
+            </template>
+            <div class="avatar-overlay">
+              <q-icon v-if="!uploadingAvatar" name="photo_camera" color="white" size="20px" />
+              <q-spinner v-else color="white" size="20px" />
+            </div>
           </q-avatar>
           <div class="col">
             <div class="text-h6 text-weight-bold">{{ profile?.full_name || 'Sem nome' }}</div>
@@ -93,14 +111,34 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
 import { useSessionsStore } from 'src/stores/sessions'
 
+const $q = useQuasar()
 const authStore = useAuthStore()
 const sessionsStore = useSessionsStore()
 
 const profile = computed(() => authStore.profile)
+const fileInput = ref(null)
+const uploadingAvatar = ref(false)
+
+async function onFileSelected(event) {
+  const file = event.target.files[0]
+  if (!file) return
+  event.target.value = ''
+
+  uploadingAvatar.value = true
+  const result = await authStore.uploadAvatar(file)
+  uploadingAvatar.value = false
+
+  if (result.success) {
+    $q.notify({ type: 'positive', message: 'Foto atualizada!' })
+  } else {
+    $q.notify({ type: 'negative', message: result.error || 'Erro ao enviar foto.' })
+  }
+}
 
 const hasMetrics = computed(() => {
   const p = profile.value
@@ -150,3 +188,28 @@ onMounted(async () => {
   await authStore.fetchProfile()
 })
 </script>
+
+<style scoped>
+.avatar-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: 50%;
+}
+
+.avatar-wrapper:hover .avatar-overlay,
+.avatar-wrapper:active .avatar-overlay {
+  opacity: 1;
+}
+</style>

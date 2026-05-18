@@ -1,5 +1,13 @@
 <template>
   <q-page class="q-pa-md">
+    <input
+      ref="fileInput"
+      type="file"
+      accept="image/*"
+      style="display: none"
+      @change="onFileSelected"
+    />
+
     <div class="row items-center q-mb-md">
       <q-btn flat round dense icon="arrow_back" @click="$router.back()" class="q-mr-sm" />
       <div class="text-h6 text-weight-bold">{{ athlete?.full_name || 'Aluno' }}</div>
@@ -14,8 +22,17 @@
       <q-card flat bordered class="q-mb-md">
         <q-card-section>
           <div class="row items-center no-wrap q-mb-sm">
-            <q-avatar color="primary" text-color="white" size="48px" class="q-mr-md">
-              {{ initials(athlete?.full_name) }}
+            <q-avatar size="56px" class="q-mr-md cursor-pointer avatar-wrapper" @click="fileInput.click()">
+              <img v-if="athlete?.avatar_url" :src="athlete.avatar_url" style="object-fit: cover; width: 100%; height: 100%;" />
+              <template v-else>
+                <q-avatar color="primary" text-color="white" size="56px">
+                  {{ initials(athlete?.full_name) }}
+                </q-avatar>
+              </template>
+              <div class="avatar-overlay">
+                <q-icon v-if="!uploadingAvatar" name="photo_camera" color="white" size="18px" />
+                <q-spinner v-else color="white" size="18px" />
+              </div>
             </q-avatar>
             <div class="col">
               <div class="text-weight-bold text-body1">{{ athlete?.full_name || 'Sem nome' }}</div>
@@ -226,6 +243,8 @@ const programsStore = useProgramsStore()
 const authStore = useAuthStore()
 
 const loading = ref(true)
+const fileInput = ref(null)
+const uploadingAvatar = ref(false)
 const newProgramDialog = ref(false)
 const saving = ref(false)
 const programForm = ref({ name: '', start_date: '', end_date: '' })
@@ -286,6 +305,22 @@ const bmiLabel = computed(() => {
 
 function initials(name) {
   return (name || '?').split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()
+}
+
+async function onFileSelected(event) {
+  const file = event.target.files[0]
+  if (!file) return
+  event.target.value = ''
+
+  uploadingAvatar.value = true
+  const result = await programsStore.uploadAthleteAvatar(route.params.id, file)
+  uploadingAvatar.value = false
+
+  if (result.success) {
+    $q.notify({ type: 'positive', message: 'Foto atualizada!' })
+  } else {
+    $q.notify({ type: 'negative', message: result.error || 'Erro ao enviar foto.' })
+  }
 }
 
 function openEditProfile() {
@@ -359,3 +394,28 @@ onMounted(async () => {
   loading.value = false
 })
 </script>
+
+<style scoped>
+.avatar-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: 50%;
+}
+
+.avatar-wrapper:hover .avatar-overlay,
+.avatar-wrapper:active .avatar-overlay {
+  opacity: 1;
+}
+</style>
