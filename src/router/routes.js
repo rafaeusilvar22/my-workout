@@ -33,7 +33,6 @@ const routes = [
     children: [
       { path: 'home', component: () => import('src/pages/athlete/HomePage.vue') },
       { path: 'workout/:splitId', component: () => import('src/pages/athlete/WorkoutPage.vue') },
-      { path: 'history', component: () => import('src/pages/athlete/HistoryPage.vue') },
       { path: 'progress', component: () => import('src/pages/athlete/ProgressPage.vue') },
       { path: 'profile', component: () => import('src/pages/athlete/ProfilePage.vue') },
     ],

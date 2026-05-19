@@ -21,7 +21,6 @@
         class="athlete-tabs"
       >
         <q-route-tab to="/athlete/home" icon="home" label="Hoje" exact />
-        <q-route-tab to="/athlete/history" icon="history" label="Histórico" exact />
         <q-route-tab to="/athlete/progress" icon="emoji_events" label="Conquistas" exact />
         <q-route-tab to="/athlete/profile" icon="person" label="Perfil" exact />
       </q-tabs>

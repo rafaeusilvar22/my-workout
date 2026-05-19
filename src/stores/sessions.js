@@ -179,28 +179,30 @@ export const useSessionsStore = defineStore('sessions', () => {
   async function checkAndGrantAchievements(athleteId) {
     const existingTypes = achievements.value.map(a => a.type)
     const toGrant = []
+    const completed = sessions.value.filter(s => s.completed)
+    const streak = computeStreak(sessions.value)
 
-    // first_session
-    if (!existingTypes.includes('first_session')) {
-      const completed = sessions.value.filter(s => s.completed)
-      if (completed.length >= 1) {
-        toGrant.push({ athlete_id: athleteId, type: 'first_session', description: 'Primeira sessão concluída!' })
+    const sessionMilestones = [
+      { type: 'first_session', target: 1,   description: 'Primeira sessão concluída!' },
+      { type: '10_sessions',   target: 10,  description: '10 sessões concluídas!' },
+      { type: '25_sessions',   target: 25,  description: '25 sessões concluídas!' },
+      { type: '50_sessions',   target: 50,  description: '50 sessões concluídas!' },
+      { type: '100_sessions',  target: 100, description: '100 sessões concluídas!' },
+    ]
+    for (const m of sessionMilestones) {
+      if (!existingTypes.includes(m.type) && completed.length >= m.target) {
+        toGrant.push({ athlete_id: athleteId, type: m.type, description: m.description })
       }
     }
 
-    // streak_7: 7 dias únicos de sessões completadas nos últimos 7 dias
-    if (!existingTypes.includes('streak_7')) {
-      const streak = computeStreak(sessions.value)
-      if (streak >= 7) {
-        toGrant.push({ athlete_id: athleteId, type: 'streak_7', description: '7 dias seguidos de treino!' })
-      }
-    }
-
-    // 10_sessions
-    if (!existingTypes.includes('10_sessions')) {
-      const completed = sessions.value.filter(s => s.completed)
-      if (completed.length >= 10) {
-        toGrant.push({ athlete_id: athleteId, type: '10_sessions', description: '10 sessões concluídas!' })
+    const streakMilestones = [
+      { type: 'streak_7',  target: 7,  description: '7 dias seguidos de treino!' },
+      { type: 'streak_14', target: 14, description: '14 dias seguidos de treino!' },
+      { type: 'streak_30', target: 30, description: '30 dias seguidos de treino!' },
+    ]
+    for (const m of streakMilestones) {
+      if (!existingTypes.includes(m.type) && streak >= m.target) {
+        toGrant.push({ athlete_id: athleteId, type: m.type, description: m.description })
       }
     }
 
@@ -344,7 +346,6 @@ export const useSessionsStore = defineStore('sessions', () => {
       .eq('workout_sessions.athlete_id', athleteId)
       .eq('workout_sessions.completed', true)
       .not('weight_kg', 'is', null)
-      .order('workout_sessions.session_date')
     if (error) return { data: [], error }
 
     // Agrupa por data — máximo por dia
