@@ -10,7 +10,8 @@
         <div class="text-h6 text-weight-bold text-white">{{ split?.name || 'Treino' }}</div>
         <div class="text-caption" style="color: rgba(255,255,255,0.8)">{{ exercises.length }} exercícios</div>
       </div>
-      <div class="text-caption text-white text-weight-bold">{{ elapsedFormatted }}</div>
+      <div class="text-caption text-white text-weight-bold q-mr-sm">{{ elapsedFormatted }}</div>
+      <q-btn flat round dense icon="delete_outline" text-color="white" style="opacity:0.7" @click="confirmDiscard" />
     </div>
 
     <div class="q-pa-md">
@@ -236,7 +237,7 @@ const sessionId = ref(null)
 const split = ref(null)
 const exercises = ref([])
 const logMap = reactive({})
-const startTime = Date.now()
+let startTime = Date.now()
 const elapsed = ref(0)
 let timer = null
 
@@ -300,6 +301,21 @@ function showInfoDialog() {
   })
 }
 
+function confirmDiscard() {
+  $q.dialog({
+    title: 'Excluir treino',
+    message: 'Deseja excluir este treino? Os exercícios registados serão apagados.',
+    cancel: { label: 'Cancelar', flat: true },
+    ok: { label: 'Excluir', color: 'negative', unelevated: true },
+    persistent: true,
+  }).onOk(async () => {
+    if (sessionId.value) {
+      await sessionsStore.discardSession(sessionId.value, authStore.user.id)
+    }
+    router.push('/athlete/home')
+  })
+}
+
 async function finishWorkout() {
   finishing.value = true
   const duration = Math.floor((Date.now() - startTime) / 60000)
@@ -358,7 +374,13 @@ onMounted(async () => {
 
   // Inicia sessão
   const { data, error } = await sessionsStore.startSession(authStore.user.id, splitId)
-  if (!error) sessionId.value = data?.id
+  if (!error) {
+    sessionId.value = data?.id
+    if (data?.started_at) {
+      startTime = new Date(data.started_at).getTime()
+      elapsed.value = Math.floor((Date.now() - startTime) / 1000)
+    }
+  }
 
   // Pré-preenche com logs existentes (sessão retomada) e/ou treino anterior
   if (sessionId.value) {
@@ -390,8 +412,8 @@ onMounted(async () => {
 
   loading.value = false
 
-  // Cronômetro
-  timer = setInterval(() => { elapsed.value++ }, 1000)
+  // Cronômetro — cálculo absoluto para manter precisão ao retomar
+  timer = setInterval(() => { elapsed.value = Math.floor((Date.now() - startTime) / 1000) }, 1000)
 })
 
 onUnmounted(() => clearInterval(timer))

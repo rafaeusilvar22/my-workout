@@ -200,6 +200,11 @@ import { useSessionsStore } from 'src/stores/sessions'
 import { useMeasurementsStore } from 'src/stores/measurements'
 import { useAuthStore } from 'src/stores/auth'
 
+function localDateStr() {
+  const d = new Date()
+  return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-')
+}
+
 const route = useRoute()
 const $q = useQuasar()
 const programsStore = useProgramsStore()
@@ -216,7 +221,7 @@ const progressData = ref([])
 const addMeasurementDialog = ref(false)
 const savingMeasurement = ref(false)
 const measurementForm = ref({
-  measured_at: new Date().toISOString().split('T')[0],
+  measured_at: localDateStr(),
   weight_kg: null,
   body_fat_pct: null,
   muscle_mass_kg: null,
@@ -412,7 +417,7 @@ function formatDate(dateStr) {
 
 function openAddMeasurement() {
   measurementForm.value = {
-    measured_at: new Date().toISOString().split('T')[0],
+    measured_at: localDateStr(),
     weight_kg: null,
     body_fat_pct: null,
     muscle_mass_kg: null,

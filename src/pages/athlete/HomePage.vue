@@ -41,6 +41,31 @@
     <template v-else-if="sessionsStore.activeProgram">
       <div class="text-subtitle1 text-weight-bold q-mb-sm">Treino de hoje</div>
 
+      <!-- Treino em andamento -->
+      <q-card
+        v-if="inProgressSession && !todayCompletedSplit"
+        flat bordered
+        class="q-mb-sm split-card cursor-pointer"
+        :style="{ borderLeft: `5px solid ${inProgressSession.training_splits?.color || '#ff8f00'}` }"
+        @click="router.push(`/athlete/workout/${inProgressSession.split_id}`)"
+      >
+        <q-card-section class="row items-center no-wrap">
+          <q-icon name="play_circle" size="32px" class="q-mr-md text-orange" />
+          <div class="col">
+            <div class="text-weight-bold text-orange">Continuar treino</div>
+            <div class="text-caption text-grey-6">
+              {{ inProgressSession.training_splits?.name }} · em andamento
+            </div>
+          </div>
+          <q-btn
+            flat round dense
+            icon="delete_outline"
+            color="grey-5"
+            @click.stop="confirmDiscard(inProgressSession)"
+          />
+        </q-card-section>
+      </q-card>
+
       <!-- Já treinou hoje -->
       <template v-if="todayCompletedSplit">
         <q-card
@@ -258,19 +283,22 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
 import { useSessionsStore } from 'src/stores/sessions'
 import { useScheduleStore } from 'src/stores/schedule'
 import ConsistencyCalendar from 'src/components/athlete/ConsistencyCalendar.vue'
 
 const router = useRouter()
+const $q = useQuasar()
 const authStore = useAuthStore()
 const sessionsStore = useSessionsStore()
 const scheduleStore = useScheduleStore()
 const loading = ref(true)
 const chooserSheet = ref(false)
 
-const todayStr = new Date().toISOString().split('T')[0]
+const d = new Date()
+const todayStr = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-')
 const isGymClosedToday = computed(() => !scheduleStore.isGymOpen(todayStr))
 const todayException = computed(() => scheduleStore.exceptions.find(e => e.exception_date === todayStr))
 
@@ -312,6 +340,12 @@ const todayCompletedSplit = computed(() =>
   sessionsStore.getTodayCompletedSplit(sessionsStore.activeProgram)
 )
 
+const inProgressSession = computed(() => {
+  const now = new Date()
+  const today = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-')
+  return sessionsStore.sessions.find(s => s.session_date === today && !s.completed) || null
+})
+
 // Todos os splits do programa ativo (para o seletor)
 const allSplits = computed(() => {
   const splits = []
@@ -334,11 +368,25 @@ function hexToFaded(hex) {
 }
 
 
+function confirmDiscard(session) {
+  $q.dialog({
+    title: 'Excluir treino',
+    message: `Deseja excluir o treino "${session.training_splits?.name}" que foi iniciado acidentalmente?`,
+    cancel: { label: 'Cancelar', flat: true },
+    ok: { label: 'Excluir', color: 'negative', unelevated: true },
+    persistent: true,
+  }).onOk(async () => {
+    await sessionsStore.discardSession(session.id, authStore.user.id)
+    $q.notify({ type: 'positive', message: 'Treino excluído.' })
+  })
+}
+
 onMounted(async () => {
   await Promise.all([
     sessionsStore.fetchActiveProgram(authStore.user.id),
     sessionsStore.fetchSessions(authStore.user.id),
   ])
+  await sessionsStore.autoFinishStaleSessions(authStore.user.id)
   const trainerId = sessionsStore.activeProgram?.trainer_id
   if (trainerId) {
     await Promise.all([

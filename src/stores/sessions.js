@@ -2,6 +2,14 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { supabase } from 'src/boot/supabase'
 
+function localDateStr(date = new Date()) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0'),
+  ].join('-')
+}
+
 export const useSessionsStore = defineStore('sessions', () => {
   const sessions = ref([])
   const activeProgram = ref(null)
@@ -47,18 +55,77 @@ export const useSessionsStore = defineStore('sessions', () => {
   }
 
   async function startSession(athleteId, splitId) {
-    const today = new Date().toISOString().split('T')[0]
-    // Evita duplicar sessão do mesmo dia/split
-    const existing = sessions.value.find(s => s.session_date === today && s.split_id === splitId)
-    if (existing) return { data: existing, error: null }
+    const today = localDateStr()
 
+    // 1. Checa em memória primeiro (evita round-trip desnecessário)
+    const inMemory = sessions.value.find(s => s.session_date === today && s.split_id === splitId)
+    if (inMemory) return { data: inMemory, error: null }
+
+    // 2. Busca no banco — cobre o caso de reinício do app com store vazio
+    const { data: existing } = await supabase
+      .from('workout_sessions')
+      .select('*')
+      .eq('athlete_id', athleteId)
+      .eq('split_id', splitId)
+      .eq('session_date', today)
+      .maybeSingle()
+
+    if (existing) {
+      const FOUR_HOURS = 4 * 60 * 60 * 1000
+      if (!existing.completed && existing.started_at &&
+          Date.now() - new Date(existing.started_at).getTime() > FOUR_HOURS) {
+        // Sessão obsoleta: auto-finaliza e cria nova abaixo
+        const staleDuration = Math.round((Date.now() - new Date(existing.started_at).getTime()) / 60000)
+        await supabase.from('workout_sessions')
+          .update({ completed: true, duration_minutes: staleDuration })
+          .eq('id', existing.id)
+      } else {
+        if (!sessions.value.find(s => s.id === existing.id)) {
+          sessions.value = [existing, ...sessions.value]
+        }
+        return { data: existing, error: null }
+      }
+    }
+
+    // 3. Cria nova sessão com started_at
     const { data, error } = await supabase
       .from('workout_sessions')
-      .insert({ athlete_id: athleteId, split_id: splitId, session_date: today, completed: false })
+      .insert({ athlete_id: athleteId, split_id: splitId, session_date: today, completed: false, started_at: new Date().toISOString() })
       .select()
       .single()
     if (!error) await fetchSessions(athleteId)
-    return { data: data || sessions.value.find(s => s.session_date === today && s.split_id === splitId), error }
+    return { data, error }
+  }
+
+  async function discardSession(sessionId, athleteId) {
+    const { error } = await supabase
+      .from('workout_sessions')
+      .delete()
+      .eq('id', sessionId)
+    if (!error) {
+      sessions.value = sessions.value.filter(s => s.id !== sessionId)
+      await fetchSessions(athleteId)
+    }
+    return { error }
+  }
+
+  async function autoFinishStaleSessions(athleteId) {
+    const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
+    const { data: stale } = await supabase
+      .from('workout_sessions')
+      .select('id, started_at')
+      .eq('athlete_id', athleteId)
+      .eq('completed', false)
+      .not('started_at', 'is', null)
+      .lt('started_at', fourHoursAgo)
+    if (!stale?.length) return
+    for (const s of stale) {
+      const duration = Math.round((Date.now() - new Date(s.started_at).getTime()) / 60000)
+      await supabase.from('workout_sessions')
+        .update({ completed: true, duration_minutes: duration })
+        .eq('id', s.id)
+    }
+    await fetchSessions(athleteId)
   }
 
   async function logExercise(sessionId, splitExerciseId, payload) {
@@ -210,7 +277,7 @@ export const useSessionsStore = defineStore('sessions', () => {
   // Retorna o split da sessão já concluída hoje (se houver)
   function getTodayCompletedSplit(program) {
     if (!program) return null
-    const today = new Date().toISOString().split('T')[0]
+    const today = localDateStr()
     const todayDone = sessions.value.find(s => s.completed && s.session_date === today)
     if (!todayDone) return null
 
@@ -299,5 +366,6 @@ export const useSessionsStore = defineStore('sessions', () => {
     fetchAchievements, checkAndGrantAchievements,
     getStreak, getNextSplit, getTodayCompletedSplit,
     fetchSessionLogs, fetchPreviousSessionLogs, fetchAthleteSessionsForTrainer, fetchExerciseProgress,
+    discardSession, autoFinishStaleSessions,
   }
 })
