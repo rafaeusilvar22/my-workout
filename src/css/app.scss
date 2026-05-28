@@ -5,13 +5,19 @@
 // ── Base ──────────────────────────────────────────────────────
 
 body {
-  background: radial-gradient(ellipse 80% 40% at 50% 0%, #1a1a3e 0%, #0c0c14 55%);
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(100, 80, 200, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0, 180, 100, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 60% at 50% 0%, #1a1a3e 0%, #0c0c14 60%);
   min-height: 100vh;
   font-family: 'Urbanist', sans-serif;
 }
 
 body.body--light {
-  background: linear-gradient(135deg, #e8eaf6 0%, #f5f7fa 60%);
+  background:
+    radial-gradient(ellipse 50% 40% at 15% 10%, rgba(180, 160, 255, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 35% at 85% 85%, rgba(100, 200, 180, 0.12) 0%, transparent 50%),
+    linear-gradient(135deg, #eef0ff 0%, #f5f7fa 100%);
 }
 
 // ── Layout ────────────────────────────────────────────────────

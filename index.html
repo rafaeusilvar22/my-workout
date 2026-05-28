@@ -23,5 +23,14 @@
   </head>
   <body>
     <!-- quasar:entry-point -->
+    <!-- SVG liquid glass filter — Chrome progressive enhancement -->
+    <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+      <defs>
+        <filter id="liquid-glass" color-interpolation-filters="sRGB" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.012" numOctaves="2" seed="4" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+    </svg>
   </body>
 </html>
