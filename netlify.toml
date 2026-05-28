@@ -1,6 +1,11 @@
 [build]
-  command = "quasar build"
-  publish = "dist/spa"
+  command = "quasar build -m pwa"
+  publish = "dist/pwa"
 
 [build.environment]
   NODE_VERSION = "22"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
