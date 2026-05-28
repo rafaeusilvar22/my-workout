@@ -1,20 +1,74 @@
 // app global css
+@import './glass';
+@import './components';
+
+// ── Base ──────────────────────────────────────────────────────
 
 body {
-  background: #0C0C14;
+  background: radial-gradient(ellipse 80% 40% at 50% 0%, #1a1a3e 0%, #0c0c14 55%);
+  min-height: 100vh;
+  font-family: 'Urbanist', sans-serif;
 }
+
+body.body--light {
+  background: linear-gradient(135deg, #e8eaf6 0%, #f5f7fa 60%);
+}
+
+// ── Layout ────────────────────────────────────────────────────
+
+.layout-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+}
+
+// ── Light mode overrides ──────────────────────────────────────
+
+.body--light {
+  .nav-item {
+    color: rgba(0, 0, 0, 0.6);
+  }
+  .trainer-footer,
+  .athlete-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .trainer-tabs .q-tab,
+  .athlete-tabs .q-tab {
+    color: rgba(0, 0, 0, 0.4) !important;
+  }
+  .trainer-tabs .q-tab--active,
+  .athlete-tabs .q-tab--active {
+    color: var(--q-primary) !important;
+  }
+}
+
+body.body--light .section-label,
+body.body--light .stat-label {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+body.body--light .cal-day {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+body.body--light .avatar-glass {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+// ── Dark mode overrides ───────────────────────────────────────
 
 .body--dark {
   // Quasar grey utility classes don't auto-flip in dark mode
-  .bg-grey-1 { background: #1A1A2C !important; }
-  .bg-grey-2 { background: #1C1C30 !important; }
+  .bg-grey-1 { background: #1a1a2c !important; }
+  .bg-grey-2 { background: #1c1c30 !important; }
   .bg-grey-3 { background: #222238 !important; }
   .text-grey-5 { color: rgba(255, 255, 255, 0.35) !important; }
   .text-grey-6 { color: rgba(255, 255, 255, 0.45) !important; }
   .text-grey-7 { color: rgba(255, 255, 255, 0.55) !important; }
 
-  // Subtle card border
-  .q-card {
+  // Subtle card border (non-dialog cards)
+  .q-card:not(.q-dialog .q-card) {
     border: 1px solid rgba(255, 255, 255, 0.07);
   }
 
@@ -24,15 +78,15 @@ body {
   .bg-orange-1 { background: rgba(255, 107, 0, 0.12) !important; }
   .bg-purple-1 { background: rgba(156, 39, 176, 0.12) !important; }
   .bg-red-1    { background: rgba(255, 71, 87, 0.12) !important; }
-  .text-blue-9   { color: #00D4FF !important; }
-  .text-green-9  { color: #00E676 !important; }
-  .text-orange-9 { color: #FF6B00 !important; }
-  .text-purple-9 { color: #CE93D8 !important; }
-  .text-red-8    { color: #FF4757 !important; }
+  .text-blue-9   { color: #00d4ff !important; }
+  .text-green-9  { color: #00e676 !important; }
+  .text-orange-9 { color: #ff6b00 !important; }
+  .text-purple-9 { color: #ce93d8 !important; }
+  .text-red-8    { color: #ff4757 !important; }
 
   // Drag ghost
   .drag-ghost { background: rgba(0, 230, 118, 0.1) !important; }
 
   // Expansion item header class used in ProgramBuilder
-  .bg-dark-elevated { background: #1A1A2C; }
+  .bg-dark-elevated { background: #1a1a2c; }
 }
