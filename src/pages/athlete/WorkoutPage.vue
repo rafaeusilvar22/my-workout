@@ -1,215 +1,261 @@
 <template>
   <q-page>
     <!-- Header colorido -->
-    <div
-      class="q-pa-md row items-center"
-      :style="{ background: split?.color || '#1976d2' }"
-    >
-      <q-btn flat round dense icon="fas fa-arrow-left" text-color="white" @click="$router.back()" class="q-mr-sm" />
+    <div class="q-pa-md row items-center" :style="{ background: split?.color || '#1976d2' }">
+      <q-btn
+        flat
+        round
+        dense
+        icon="fas fa-arrow-left"
+        text-color="white"
+        @click="$router.back()"
+        class="q-mr-sm"
+      />
       <div class="col">
         <div class="text-h6 text-weight-bold text-white">{{ split?.name || 'Treino' }}</div>
-        <div class="text-caption" style="color: rgba(255,255,255,0.8)">{{ exercises.length }} exercícios</div>
+        <div class="text-caption" style="color: rgba(255, 255, 255, 0.8)">
+          {{ exercises.length }} exercícios
+        </div>
       </div>
       <div class="text-caption text-white text-weight-bold q-mr-sm">{{ elapsedFormatted }}</div>
-      <q-btn flat round dense icon="far fa-trash-can" text-color="white" style="opacity:0.7" @click="confirmDiscard" />
+      <q-btn
+        flat
+        round
+        dense
+        icon="far fa-trash-can"
+        text-color="white"
+        style="opacity: 0.7"
+        @click="confirmDiscard"
+      />
     </div>
 
     <div class="q-pa-md">
-    <!-- Progresso -->
-    <q-linear-progress
-      :value="progress"
-      class="q-mb-md"
-      rounded
-      size="8px"
-      :style="{ accentColor: split?.color }"
-    />
-    <div class="text-caption text-grey-6 text-right q-mb-md">
-      {{ doneCount }}/{{ exercises.length }} concluídos
-    </div>
-
-    <div v-if="loading" class="flex flex-center q-py-xl">
-      <q-spinner color="primary" size="40px" />
-    </div>
-
-    <template v-else>
-      <!-- Info opcional -->
-      <div class="row items-center q-mb-sm">
-        <span class="text-caption text-grey-5">Carga, reps e séries são opcionais</span>
-        <q-btn flat round dense size="xs" icon="far fa-circle-info" color="primary" class="q-ml-xs info-btn" @click="showInfoDialog" />
+      <!-- Progresso -->
+      <q-linear-progress
+        :value="progress"
+        class="q-mb-md"
+        rounded
+        size="8px"
+        :style="{ accentColor: split?.color }"
+      />
+      <div class="text-caption text-grey-6 text-right q-mb-md">
+        {{ doneCount }}/{{ exercises.length }} concluídos
       </div>
 
-      <template v-for="(group, gi) in exerciseGroups" :key="gi">
-        <!-- Bi-set card -->
-        <q-card
-          v-if="group.superset"
-          flat bordered
-          class="q-mb-sm"
-          :class="{ 'border-done': isGroupDone(group) }"
-          style="border-left: 3px solid var(--q-accent);"
-        >
-          <div class="row items-center q-px-md q-pt-sm q-pb-none">
-            <q-icon name="fas fa-arrows-up-down" size="14px" color="orange" class="q-mr-xs" />
-            <span class="text-caption text-orange text-weight-bold">BI-SET</span>
-          </div>
-          <template v-for="(se, si) in group.items" :key="se.id">
-            <q-separator v-if="si > 0" inset />
-            <q-card-section class="q-py-sm">
+      <div v-if="loading" class="flex flex-center q-py-xl">
+        <q-spinner color="primary" size="40px" />
+      </div>
+
+      <template v-else>
+        <!-- Info opcional -->
+        <div class="row items-center q-mb-sm">
+          <span class="text-caption text-grey-5">Carga, reps e séries são opcionais</span>
+          <q-btn
+            flat
+            round
+            dense
+            size="xs"
+            icon="fas fa-info-circle"
+            color="primary"
+            class="q-ml-xs info-btn"
+            @click="showInfoDialog"
+          />
+        </div>
+
+        <template v-for="(group, gi) in exerciseGroups" :key="gi">
+          <!-- Bi-set card -->
+          <q-card
+            v-if="group.superset"
+            flat
+            bordered
+            class="q-mb-sm"
+            :class="{ 'border-done': isGroupDone(group) }"
+            style="border-left: 3px solid var(--q-accent)"
+          >
+            <div class="row items-center q-px-md q-pt-sm q-pb-none">
+              <q-icon name="fas fa-arrows-up-down" size="14px" color="orange" class="q-mr-xs" />
+              <span class="text-caption text-orange text-weight-bold">BI-SET</span>
+            </div>
+            <template v-for="(se, si) in group.items" :key="se.id">
+              <q-separator v-if="si > 0" inset />
+              <q-card-section class="q-py-sm">
+                <div class="row items-start no-wrap">
+                  <div
+                    class="text-weight-bold text-orange q-mr-xs q-mt-sm"
+                    style="min-width: 24px; font-size: 12px"
+                  >
+                    {{ gi + 1 }}{{ 'ABCDEFGH'[si] }}
+                  </div>
+                  <q-checkbox
+                    v-model="logMap[se.id].done"
+                    color="orange"
+                    class="q-mr-xs q-mt-xs"
+                    @update:model-value="(val) => onToggleDone(se, val)"
+                  />
+                  <div class="col">
+                    <div class="row items-center justify-between no-wrap">
+                      <div class="text-weight-bold">{{ se.exercises?.name }}</div>
+                      <img
+                        v-if="se.exercises?.image_url"
+                        :src="se.exercises.image_url"
+                        class="exercise-thumb"
+                        @click.stop="viewImage(se.exercises)"
+                      />
+                    </div>
+                    <div class="text-caption text-grey-6">
+                      {{ se.sets }} séries · {{ se.reps }} reps
+                      <span v-if="si === group.items.length - 1">
+                        · {{ se.rest_seconds }}s descanso</span
+                      >
+                    </div>
+                    <div class="row q-gutter-sm q-mt-sm">
+                      <q-input
+                        v-model.number="logMap[se.id].weight_kg"
+                        label="Carga (kg)"
+                        outlined
+                        dense
+                        type="number"
+                        class="col"
+                        @blur="saveLog(se)"
+                      />
+                      <q-input
+                        v-model="logMap[se.id].reps_completed"
+                        label="Reps feitas"
+                        outlined
+                        dense
+                        class="col"
+                        @blur="saveLog(se)"
+                      />
+                      <q-input
+                        v-model.number="logMap[se.id].sets_completed"
+                        label="Séries"
+                        outlined
+                        dense
+                        type="number"
+                        style="max-width: 72px"
+                        @blur="saveLog(se)"
+                      />
+                    </div>
+                    <q-input
+                      v-if="se.notes"
+                      readonly
+                      :model-value="se.notes"
+                      label="Obs. do treinador"
+                      outlined
+                      dense
+                      class="q-mt-xs"
+                    />
+                  </div>
+                </div>
+              </q-card-section>
+            </template>
+          </q-card>
+
+          <!-- Exercício normal -->
+          <q-card
+            v-else
+            flat
+            bordered
+            class="q-mb-sm"
+            :class="{ 'border-done': logMap[group.items[0].id]?.done }"
+          >
+            <q-card-section>
               <div class="row items-start no-wrap">
-                <div class="text-weight-bold text-orange q-mr-xs q-mt-sm" style="min-width: 24px; font-size: 12px;">
-                  {{ gi + 1 }}{{ 'ABCDEFGH'[si] }}
+                <div
+                  class="text-weight-bold text-grey-5 q-mr-xs q-mt-sm"
+                  style="min-width: 24px; font-size: 12px"
+                >
+                  {{ gi + 1 }}
                 </div>
                 <q-checkbox
-                  v-model="logMap[se.id].done"
-                  color="orange"
+                  v-model="logMap[group.items[0].id].done"
+                  color="primary"
                   class="q-mr-xs q-mt-xs"
-                  @update:model-value="val => onToggleDone(se, val)"
+                  @update:model-value="(val) => onToggleDone(group.items[0], val)"
                 />
                 <div class="col">
                   <div class="row items-center justify-between no-wrap">
-                    <div class="text-weight-bold">{{ se.exercises?.name }}</div>
+                    <div class="text-weight-bold">{{ group.items[0].exercises?.name }}</div>
                     <img
-                      v-if="se.exercises?.image_url"
-                      :src="se.exercises.image_url"
+                      v-if="group.items[0].exercises?.image_url"
+                      :src="group.items[0].exercises.image_url"
                       class="exercise-thumb"
-                      @click.stop="viewImage(se.exercises)"
+                      @click.stop="viewImage(group.items[0].exercises)"
                     />
                   </div>
                   <div class="text-caption text-grey-6">
-                    {{ se.sets }} séries · {{ se.reps }} reps
-                    <span v-if="si === group.items.length - 1"> · {{ se.rest_seconds }}s descanso</span>
+                    {{ group.items[0].sets }} séries · {{ group.items[0].reps }} reps ·
+                    {{ group.items[0].rest_seconds }}s descanso
                   </div>
                   <div class="row q-gutter-sm q-mt-sm">
                     <q-input
-                      v-model.number="logMap[se.id].weight_kg"
+                      v-model.number="logMap[group.items[0].id].weight_kg"
                       label="Carga (kg)"
-                      outlined dense
+                      outlined
+                      dense
                       type="number"
                       class="col"
-                      @blur="saveLog(se)"
+                      @blur="saveLog(group.items[0])"
                     />
                     <q-input
-                      v-model="logMap[se.id].reps_completed"
+                      v-model="logMap[group.items[0].id].reps_completed"
                       label="Reps feitas"
-                      outlined dense
+                      outlined
+                      dense
                       class="col"
-                      @blur="saveLog(se)"
+                      @blur="saveLog(group.items[0])"
                     />
                     <q-input
-                      v-model.number="logMap[se.id].sets_completed"
+                      v-model.number="logMap[group.items[0].id].sets_completed"
                       label="Séries"
-                      outlined dense
+                      outlined
+                      dense
                       type="number"
                       style="max-width: 72px"
-                      @blur="saveLog(se)"
+                      @blur="saveLog(group.items[0])"
                     />
                   </div>
                   <q-input
-                    v-if="se.notes"
+                    v-if="group.items[0].notes"
                     readonly
-                    :model-value="se.notes"
+                    :model-value="group.items[0].notes"
                     label="Obs. do treinador"
-                    outlined dense
+                    outlined
+                    dense
                     class="q-mt-xs"
                   />
                 </div>
               </div>
             </q-card-section>
-          </template>
-        </q-card>
+          </q-card>
+        </template>
 
-        <!-- Exercício normal -->
-        <q-card
-          v-else
-          flat bordered
-          class="q-mb-sm"
-          :class="{ 'border-done': logMap[group.items[0].id]?.done }"
-        >
-          <q-card-section>
-            <div class="row items-start no-wrap">
-              <div class="text-weight-bold text-grey-5 q-mr-xs q-mt-sm" style="min-width: 24px; font-size: 12px;">
-                {{ gi + 1 }}
-              </div>
-              <q-checkbox
-                v-model="logMap[group.items[0].id].done"
-                color="primary"
-                class="q-mr-xs q-mt-xs"
-                @update:model-value="val => onToggleDone(group.items[0], val)"
-              />
-              <div class="col">
-                <div class="row items-center justify-between no-wrap">
-                  <div class="text-weight-bold">{{ group.items[0].exercises?.name }}</div>
-                  <img
-                    v-if="group.items[0].exercises?.image_url"
-                    :src="group.items[0].exercises.image_url"
-                    class="exercise-thumb"
-                    @click.stop="viewImage(group.items[0].exercises)"
-                  />
-                </div>
-                <div class="text-caption text-grey-6">
-                  {{ group.items[0].sets }} séries · {{ group.items[0].reps }} reps · {{ group.items[0].rest_seconds }}s descanso
-                </div>
-                <div class="row q-gutter-sm q-mt-sm">
-                  <q-input
-                    v-model.number="logMap[group.items[0].id].weight_kg"
-                    label="Carga (kg)"
-                    outlined dense
-                    type="number"
-                    class="col"
-                    @blur="saveLog(group.items[0])"
-                  />
-                  <q-input
-                    v-model="logMap[group.items[0].id].reps_completed"
-                    label="Reps feitas"
-                    outlined dense
-                    class="col"
-                    @blur="saveLog(group.items[0])"
-                  />
-                  <q-input
-                    v-model.number="logMap[group.items[0].id].sets_completed"
-                    label="Séries"
-                    outlined dense
-                    type="number"
-                    style="max-width: 72px"
-                    @blur="saveLog(group.items[0])"
-                  />
-                </div>
-                <q-input
-                  v-if="group.items[0].notes"
-                  readonly
-                  :model-value="group.items[0].notes"
-                  label="Obs. do treinador"
-                  outlined dense
-                  class="q-mt-xs"
-                />
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
+        <q-btn
+          color="positive"
+          label="Finalizar Treino"
+          icon="fas fa-circle-check"
+          class="full-width q-mt-md"
+          size="lg"
+          unelevated
+          :loading="finishing"
+          :disable="doneCount === 0"
+          @click="finishWorkout"
+        />
       </template>
-
-      <q-btn
-        color="positive"
-        label="Finalizar Treino"
-        icon="fas fa-circle-check"
-        class="full-width q-mt-md"
-        size="lg"
-        unelevated
-        :loading="finishing"
-        :disable="doneCount === 0"
-        @click="finishWorkout"
-      />
-    </template>
     </div>
 
     <!-- Dialog: visualização da imagem do exercício -->
     <q-dialog v-model="imageDialog">
-      <q-card style="width: 92vw; max-width: 420px;">
+      <q-card style="width: 92vw; max-width: 420px">
         <q-card-section class="row items-center justify-between q-pb-xs">
           <div class="text-subtitle1 text-weight-bold">{{ imageExercise?.name }}</div>
           <q-btn flat round dense icon="fas fa-xmark" v-close-popup />
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <img :src="imageExercise?.image_url" style="width: 100%; border-radius: 8px; display: block;" />
+          <img
+            :src="imageExercise?.image_url"
+            style="width: 100%; border-radius: 8px; display: block"
+          />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -247,8 +293,10 @@ const elapsedFormatted = computed(() => {
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 })
 
-const doneCount = computed(() => Object.values(logMap).filter(l => l.done).length)
-const progress = computed(() => exercises.value.length ? doneCount.value / exercises.value.length : 0)
+const doneCount = computed(() => Object.values(logMap).filter((l) => l.done).length)
+const progress = computed(() =>
+  exercises.value.length ? doneCount.value / exercises.value.length : 0,
+)
 
 const exerciseGroups = computed(() => {
   const sorted = [...exercises.value].sort((a, b) => a.order_index - b.order_index)
@@ -270,7 +318,7 @@ const exerciseGroups = computed(() => {
 })
 
 function isGroupDone(group) {
-  return group.items.every(se => logMap[se.id]?.done)
+  return group.items.every((se) => logMap[se.id]?.done)
 }
 
 async function onToggleDone(se, val) {
@@ -295,8 +343,9 @@ function viewImage(exercise) {
 
 function showInfoDialog() {
   $q.dialog({
-    title: 'Por que registar esses dados?',
-    message: 'Carga, repetições e séries realizadas são opcionais. Ao preenchê-los, o seu treinador consegue acompanhar a sua evolução, ajustar o plano e personalizar os próximos treinos com muito mais precisão.',
+    title: 'Por que registrar esses dados?',
+    message:
+      'Carga, repetições e séries realizadas são opcionais. Ao preenchê-los, o seu treinador consegue acompanhar a sua evolução, ajustar o plano e personalizar os próximos treinos com muito mais precisão.',
     ok: { label: 'Entendi', color: 'primary', unelevated: true },
   })
 }
@@ -350,8 +399,11 @@ onMounted(async () => {
 
   if (program) {
     for (const phase of program.program_phases || []) {
-      const found = (phase.training_splits || []).find(s => s.id === splitId)
-      if (found) { split.value = found; break }
+      const found = (phase.training_splits || []).find((s) => s.id === splitId)
+      if (found) {
+        split.value = found
+        break
+      }
     }
   }
 
@@ -360,8 +412,11 @@ onMounted(async () => {
     await sessionsStore.fetchActiveProgram(authStore.user.id)
     const prog = sessionsStore.activeProgram
     for (const phase of prog?.program_phases || []) {
-      const found = (phase.training_splits || []).find(s => s.id === splitId)
-      if (found) { split.value = found; break }
+      const found = (phase.training_splits || []).find((s) => s.id === splitId)
+      if (found) {
+        split.value = found
+        break
+      }
     }
   }
 
@@ -369,7 +424,13 @@ onMounted(async () => {
 
   // Inicializa logMap com valores vazios
   for (const se of exercises.value) {
-    logMap[se.id] = { done: false, weight_kg: null, reps_completed: '', sets_completed: null, notes: '' }
+    logMap[se.id] = {
+      done: false,
+      weight_kg: null,
+      reps_completed: '',
+      sets_completed: null,
+      notes: '',
+    }
   }
 
   // Inicia sessão
@@ -389,8 +450,8 @@ onMounted(async () => {
       sessionsStore.fetchPreviousSessionLogs(authStore.user.id, splitId, sessionId.value),
     ])
 
-    const existingMap = new Map((existingLogs || []).map(l => [l.split_exercise_id, l]))
-    const prevMap = new Map((prevLogs || []).map(l => [l.split_exercise_id, l]))
+    const existingMap = new Map((existingLogs || []).map((l) => [l.split_exercise_id, l]))
+    const prevMap = new Map((prevLogs || []).map((l) => [l.split_exercise_id, l]))
 
     for (const se of exercises.value) {
       if (existingMap.has(se.id)) {
@@ -413,7 +474,9 @@ onMounted(async () => {
   loading.value = false
 
   // Cronômetro — cálculo absoluto para manter precisão ao retomar
-  timer = setInterval(() => { elapsed.value = Math.floor((Date.now() - startTime) / 1000) }, 1000)
+  timer = setInterval(() => {
+    elapsed.value = Math.floor((Date.now() - startTime) / 1000)
+  }, 1000)
 })
 
 onUnmounted(() => clearInterval(timer))
@@ -435,8 +498,15 @@ onUnmounted(() => clearInterval(timer))
 }
 
 @keyframes info-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.35); opacity: 0.65; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.65;
+  }
 }
 
 .info-btn {

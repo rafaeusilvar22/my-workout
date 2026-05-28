@@ -1,10 +1,13 @@
-import { Dark } from 'quasar'
+import { Dark, Notify } from 'quasar'
 
 export default () => {
   const saved = localStorage.getItem('theme')
-  if (saved !== null) {
-    Dark.set(saved === 'dark')
-  } else {
-    Dark.set(false)
-  }
+  Dark.set(saved !== null ? saved === 'dark' : false)
+
+  Notify.setDefaults({
+    position: 'top-right',
+    timeout: 2800,
+    classes: 'notify-glass',
+    progress: false,
+  })
 }

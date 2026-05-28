@@ -2,9 +2,25 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { supabase } from 'src/boot/supabase'
 
+const PROFILE_CACHE_KEY = 'mw_profile'
+
+function saveProfileCache(data) {
+  const { id, full_name, avatar_url, role } = data
+  localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify({ id, full_name, avatar_url, role }))
+}
+
+function loadProfileCache() {
+  try {
+    const raw = localStorage.getItem(PROFILE_CACHE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
-  const profile = ref(null)
+  const profile = ref(loadProfileCache()) // inicia com cache imediato
   const loading = ref(false)
 
   const isTrainer = computed(() => profile.value?.role === 'trainer')
@@ -16,7 +32,10 @@ export const useAuthStore = defineStore('auth', () => {
       .select('*')
       .eq('id', userId)
       .single()
-    if (!error) profile.value = data
+    if (!error) {
+      profile.value = data
+      saveProfileCache(data)
+    }
   }
 
   async function signIn(email, password) {
@@ -61,6 +80,7 @@ export const useAuthStore = defineStore('auth', () => {
     await supabase.auth.signOut()
     user.value = null
     profile.value = null
+    localStorage.removeItem(PROFILE_CACHE_KEY)
   }
 
   async function init() {
@@ -105,6 +125,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (updateError) return { success: false, error: updateError.message }
 
     profile.value = { ...profile.value, avatar_url: avatarUrl }
+    saveProfileCache(profile.value)
     return { success: true }
   }
 

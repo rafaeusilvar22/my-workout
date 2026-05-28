@@ -1,5 +1,68 @@
 // ── Global component overrides ────────────────────────────────
 
+// ── Notify glass ─────────────────────────────────────────────
+
+.notify-glass {
+  background: rgba(22, 22, 38, 0.82) !important;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-family: 'Urbanist', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  min-width: 240px;
+  max-width: 340px;
+  padding: 2px 4px;
+}
+
+body.body--light .notify-glass {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10) !important;
+  color: rgba(0, 0, 0, 0.78) !important;
+}
+
+// Positive
+.notify-glass.bg-positive {
+  background: rgba(0, 230, 118, 0.14) !important;
+  border-color: rgba(0, 230, 118, 0.28) !important;
+}
+body.body--light .notify-glass.bg-positive {
+  background: rgba(0, 200, 100, 0.10) !important;
+  border-color: rgba(0, 200, 100, 0.25) !important;
+}
+
+// Negative
+.notify-glass.bg-negative {
+  background: rgba(255, 71, 87, 0.14) !important;
+  border-color: rgba(255, 71, 87, 0.28) !important;
+}
+body.body--light .notify-glass.bg-negative {
+  background: rgba(255, 71, 87, 0.08) !important;
+  border-color: rgba(255, 71, 87, 0.22) !important;
+}
+
+// Warning
+.notify-glass.bg-warning {
+  background: rgba(255, 211, 42, 0.14) !important;
+  border-color: rgba(255, 211, 42, 0.28) !important;
+}
+
+// Icon color override (herda a cor do tipo)
+.notify-glass .q-notification__icon {
+  font-size: 16px;
+}
+
+// Message text
+.notify-glass .q-notification__message {
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+
 // ── Toolbar transparente ──────────────────────────────────────
 
 .transparent-header {

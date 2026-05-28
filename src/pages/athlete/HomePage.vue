@@ -26,15 +26,15 @@
 
     <!-- Stats cards -->
     <div class="row q-gutter-sm q-mb-md">
-      <div class="col glass-card stat-card" style="border-top: 2px solid #ff6b00">
+      <div class="col glass-card stat-card">
         <div class="stat-number" style="color: #ff6b00">{{ streak }}</div>
         <div class="stat-label">Sequência</div>
       </div>
-      <div class="col glass-card stat-card" style="border-top: 2px solid var(--q-primary)">
+      <div class="col glass-card stat-card">
         <div class="stat-number text-primary">{{ completedCount }}</div>
         <div class="stat-label">Treinos</div>
       </div>
-      <div class="col glass-card stat-card" style="border-top: 2px solid #ffd32a">
+      <div class="col glass-card stat-card">
         <div class="stat-number" style="color: #ffd32a">{{ achievementsCount }}</div>
         <div class="stat-label">Badges</div>
       </div>
@@ -77,9 +77,6 @@
       <div
         v-if="inProgressSession && !todayCompletedSplit"
         class="glass-card q-mb-sm split-card cursor-pointer"
-        :style="{
-          borderLeft: `4px solid ${inProgressSession.training_splits?.color || '#ff8f00'}`,
-        }"
         @click="router.push(`/athlete/workout/${inProgressSession.split_id}`)"
       >
         <q-card-section class="row items-center no-wrap">
@@ -105,10 +102,7 @@
       <template v-if="todayCompletedSplit">
         <div
           class="glass-card q-mb-sm split-card"
-          :style="{
-            borderLeft: `4px solid ${todayCompletedSplit.color || '#43a047'}`,
-            background: hexToFaded(todayCompletedSplit.color || '#43a047'),
-          }"
+          :style="{ background: hexToFaded(todayCompletedSplit.color || '#43a047') }"
         >
           <q-card-section class="row items-center no-wrap">
             <q-icon
@@ -133,7 +127,6 @@
         <div
           v-if="nextSplit"
           class="glass-card q-mb-sm split-card"
-          :style="{ borderLeft: `4px solid ${nextSplit.color || '#1976d2'}` }"
         >
           <q-card-section class="row items-center no-wrap">
             <div
@@ -160,7 +153,6 @@
       <template v-else-if="nextSplit">
         <div
           class="glass-card q-mb-sm cursor-pointer split-card"
-          :style="{ borderLeft: `4px solid ${nextSplit.color || '#1976d2'}` }"
           @click="$router.push(`/athlete/workout/${nextSplit.id}`)"
         >
           <q-card-section class="row items-center no-wrap">
@@ -281,7 +273,6 @@
               clickable
               rounded
               class="q-mb-xs"
-              :style="{ borderLeft: `4px solid ${split.color || '#1976d2'}` }"
               @click="startSplit(split)"
             >
               <q-item-section avatar>
