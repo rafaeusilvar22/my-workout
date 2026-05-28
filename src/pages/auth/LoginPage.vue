@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <q-card class="login-card q-pa-lg bg-dark" style="border: 1px solid rgba(255,255,255,0.1);">
       <q-card-section class="text-center q-pb-sm">
-        <q-icon name="fitness_center" size="48px" color="primary" />
+        <q-icon name="fas fa-dumbbell" size="48px" color="primary" />
         <div class="text-h5 text-weight-bold q-mt-sm">My Workout</div>
         <div class="text-caption text-grey-6">Faça login na sua conta</div>
       </q-card-section>
@@ -17,7 +17,7 @@
             dense
             :rules="[val => !!val || 'Campo obrigatório']"
           >
-            <template #prepend><q-icon name="email" /></template>
+            <template #prepend><q-icon name="fas fa-envelope" /></template>
           </q-input>
 
           <q-input
@@ -28,10 +28,10 @@
             dense
             :rules="[val => !!val || 'Campo obrigatório']"
           >
-            <template #prepend><q-icon name="lock" /></template>
+            <template #prepend><q-icon name="fas fa-lock" /></template>
             <template #append>
               <q-icon
-                :name="showPass ? 'visibility_off' : 'visibility'"
+                :name="showPass ? 'fas fa-eye-slash' : 'fas fa-eye'"
                 class="cursor-pointer"
                 @click="showPass = !showPass"
               />

@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <div class="row items-center q-mb-md">
-      <q-btn flat round dense icon="arrow_back" @click="$router.back()" class="q-mr-sm" />
+      <q-btn flat round dense icon="fas fa-arrow-left" @click="$router.back()" class="q-mr-sm" />
       <div>
         <div class="text-h6 text-weight-bold">{{ program?.name || 'Carregando...' }}</div>
         <div class="text-caption text-grey-6">Montar programa de treino</div>
@@ -27,8 +27,8 @@
             </div>
           </div>
           <div class="row q-gutter-xs">
-            <q-btn flat round dense icon="add" color="primary" @click="openAddSplit(phase)" />
-            <q-btn flat round dense icon="delete" color="negative" @click="handleDeletePhase(phase)" />
+            <q-btn flat round dense icon="fas fa-plus" color="primary" @click="openAddSplit(phase)" />
+            <q-btn flat round dense icon="fas fa-trash" color="negative" @click="handleDeletePhase(phase)" />
           </div>
         </div>
 
@@ -49,13 +49,13 @@
             >
               <template #header>
                 <q-item-section side style="min-width: 24px; padding-right: 4px;">
-                  <q-icon name="drag_indicator" class="split-drag-handle cursor-grab" color="grey-4" size="20px" />
+                  <q-icon name="fas fa-grip-vertical" class="split-drag-handle cursor-grab" color="grey-4" size="20px" />
                 </q-item-section>
                 <q-item-section avatar>
                   <q-btn
                     round unelevated dense size="sm"
                     :style="{ background: split.color || '#1976d2' }"
-                    icon="palette"
+                    icon="fas fa-palette"
                     text-color="white"
                     @click.stop="openEditSplitColor(split)"
                   />
@@ -65,7 +65,7 @@
                   <q-item-label caption>{{ split.description }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
-                  <q-btn flat round dense icon="delete" size="xs" color="negative"
+                  <q-btn flat round dense icon="fas fa-trash" size="xs" color="negative"
                     @click.stop="handleDeleteSplit(split)" />
                 </q-item-section>
               </template>
@@ -83,7 +83,7 @@
                       <template #item="{ element: group }">
                         <div>
                           <div v-if="group.superset" class="row items-center q-px-xs q-pt-xs q-pb-none">
-                            <q-icon name="swap_vert" size="11px" color="orange" class="q-mr-xs" />
+                            <q-icon name="fas fa-arrows-up-down" size="11px" color="orange" class="q-mr-xs" />
                             <span class="text-caption text-orange text-weight-bold" style="font-size: 10px;">BI-SET</span>
                           </div>
                           <q-item
@@ -98,7 +98,7 @@
                             <q-item-section side style="min-width: 20px; padding-right: 4px;">
                               <q-icon
                                 v-if="si === 0"
-                                name="drag_indicator"
+                                name="fas fa-grip-vertical"
                                 class="ex-drag-handle cursor-grab"
                                 color="grey-4"
                                 size="16px"
@@ -111,8 +111,8 @@
                             </q-item-section>
                             <q-item-section side>
                               <div class="row q-gutter-xs">
-                                <q-btn flat round dense icon="edit" size="xs" color="grey-6" @click="openEditExercise(se)" />
-                                <q-btn flat round dense icon="close" size="xs" color="negative" @click="handleRemoveExercise(se)" />
+                                <q-btn flat round dense icon="fas fa-pen" size="xs" color="grey-6" @click="openEditExercise(se)" />
+                                <q-btn flat round dense icon="fas fa-xmark" size="xs" color="negative" @click="handleRemoveExercise(se)" />
                               </div>
                             </q-item-section>
                           </q-item>
@@ -122,7 +122,7 @@
                   </q-list>
 
                   <q-btn
-                    flat color="primary" icon="add" label="Adicionar exercício"
+                    flat color="primary" icon="fas fa-plus" label="Adicionar exercício"
                     size="sm" class="q-mt-sm"
                     @click="openAddExercise(split, phase)"
                   />
@@ -134,7 +134,7 @@
 
         <q-btn
           v-if="phase.training_splits?.length === 0"
-          flat color="grey-5" icon="add" label="Adicionar split"
+          flat color="grey-5" icon="fas fa-plus" label="Adicionar split"
           class="full-width"
           @click="openAddSplit(phase)"
         />
@@ -142,7 +142,7 @@
 
       <!-- Adicionar fase -->
       <q-btn
-        color="primary" icon="add" label="Nova Fase"
+        color="primary" icon="fas fa-plus" label="Nova Fase"
         unelevated class="full-width q-mt-md"
         @click="addPhaseDialog = true"
       />

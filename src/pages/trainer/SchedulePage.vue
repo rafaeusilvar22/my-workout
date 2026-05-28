@@ -41,7 +41,7 @@
         </div>
         <q-btn
           color="primary"
-          icon="add"
+          icon="fas fa-plus"
           label="Adicionar"
           unelevated
           size="sm"
@@ -50,7 +50,7 @@
       </q-card-section>
 
       <div v-if="scheduleStore.exceptions.length === 0" class="text-center text-grey-5 q-py-md">
-        <q-icon name="event_available" size="36px" />
+        <q-icon name="fas fa-calendar-check" size="36px" />
         <div class="text-caption q-mt-xs">Nenhuma exceção cadastrada</div>
       </div>
 
@@ -62,7 +62,7 @@
               size="36px"
             >
               <q-icon
-                :name="ex.is_open ? 'event_available' : 'event_busy'"
+                :name="ex.is_open ? 'fas fa-calendar-check' : 'fas fa-calendar-xmark'"
                 :color="ex.is_open ? 'positive' : 'negative'"
                 size="18px"
               />
@@ -80,7 +80,7 @@
           <q-item-section side>
             <q-btn
               flat round dense
-              icon="delete"
+              icon="fas fa-trash"
               size="xs"
               color="negative"
               @click="handleRemoveException(ex.id)"
@@ -112,7 +112,7 @@
                 :outline="exceptionForm.is_open"
                 color="negative"
                 label="Fechado"
-                icon="event_busy"
+                icon="fas fa-calendar-xmark"
                 size="sm"
                 @click="exceptionForm.is_open = false"
               />
@@ -121,7 +121,7 @@
                 :outline="!exceptionForm.is_open"
                 color="positive"
                 label="Aberto"
-                icon="event_available"
+                icon="fas fa-calendar-check"
                 size="sm"
                 @click="exceptionForm.is_open = true"
               />

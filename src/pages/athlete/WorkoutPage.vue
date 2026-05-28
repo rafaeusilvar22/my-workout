@@ -5,13 +5,13 @@
       class="q-pa-md row items-center"
       :style="{ background: split?.color || '#1976d2' }"
     >
-      <q-btn flat round dense icon="arrow_back" text-color="white" @click="$router.back()" class="q-mr-sm" />
+      <q-btn flat round dense icon="fas fa-arrow-left" text-color="white" @click="$router.back()" class="q-mr-sm" />
       <div class="col">
         <div class="text-h6 text-weight-bold text-white">{{ split?.name || 'Treino' }}</div>
         <div class="text-caption" style="color: rgba(255,255,255,0.8)">{{ exercises.length }} exercícios</div>
       </div>
       <div class="text-caption text-white text-weight-bold q-mr-sm">{{ elapsedFormatted }}</div>
-      <q-btn flat round dense icon="delete_outline" text-color="white" style="opacity:0.7" @click="confirmDiscard" />
+      <q-btn flat round dense icon="far fa-trash-can" text-color="white" style="opacity:0.7" @click="confirmDiscard" />
     </div>
 
     <div class="q-pa-md">
@@ -35,7 +35,7 @@
       <!-- Info opcional -->
       <div class="row items-center q-mb-sm">
         <span class="text-caption text-grey-5">Carga, reps e séries são opcionais</span>
-        <q-btn flat round dense size="xs" icon="info_outline" color="primary" class="q-ml-xs info-btn" @click="showInfoDialog" />
+        <q-btn flat round dense size="xs" icon="far fa-circle-info" color="primary" class="q-ml-xs info-btn" @click="showInfoDialog" />
       </div>
 
       <template v-for="(group, gi) in exerciseGroups" :key="gi">
@@ -48,7 +48,7 @@
           style="border-left: 3px solid var(--q-accent);"
         >
           <div class="row items-center q-px-md q-pt-sm q-pb-none">
-            <q-icon name="swap_vert" size="14px" color="orange" class="q-mr-xs" />
+            <q-icon name="fas fa-arrows-up-down" size="14px" color="orange" class="q-mr-xs" />
             <span class="text-caption text-orange text-weight-bold">BI-SET</span>
           </div>
           <template v-for="(se, si) in group.items" :key="se.id">
@@ -190,7 +190,7 @@
       <q-btn
         color="positive"
         label="Finalizar Treino"
-        icon="check_circle"
+        icon="fas fa-circle-check"
         class="full-width q-mt-md"
         size="lg"
         unelevated
@@ -206,7 +206,7 @@
       <q-card style="width: 92vw; max-width: 420px;">
         <q-card-section class="row items-center justify-between q-pb-xs">
           <div class="text-subtitle1 text-weight-bold">{{ imageExercise?.name }}</div>
-          <q-btn flat round dense icon="close" v-close-popup />
+          <q-btn flat round dense icon="fas fa-xmark" v-close-popup />
         </q-card-section>
         <q-card-section class="q-pt-none">
           <img :src="imageExercise?.image_url" style="width: 100%; border-radius: 8px; display: block;" />
@@ -332,7 +332,7 @@ async function finishWorkout() {
   if (newAchievements?.length > 0) {
     $q.notify({
       type: 'positive',
-      icon: 'emoji_events',
+      icon: 'fas fa-trophy',
       message: `Conquista desbloqueada: ${newAchievements[0].description}`,
       timeout: 4000,
     })

@@ -5,7 +5,7 @@
     <div class="row q-col-gutter-md q-mb-lg">
       <div class="col-6 col-md-3">
         <q-card flat bordered class="text-center q-pa-md">
-          <q-icon name="group" size="32px" color="primary" />
+          <q-icon name="fas fa-users" size="32px" color="primary" />
           <div class="text-h5 text-weight-bold q-mt-xs">{{ stats.athletes }}</div>
           <div class="text-caption text-grey-6">Alunos</div>
         </q-card>
@@ -19,14 +19,14 @@
       </div>
       <div class="col-6 col-md-3">
         <q-card flat bordered class="text-center q-pa-md">
-          <q-icon name="fitness_center" size="32px" color="green" />
+          <q-icon name="fas fa-dumbbell" size="32px" color="green" />
           <div class="text-h5 text-weight-bold q-mt-xs">{{ stats.exercises }}</div>
           <div class="text-caption text-grey-6">Exercícios</div>
         </q-card>
       </div>
       <div class="col-6 col-md-3">
         <q-card flat bordered class="text-center q-pa-md">
-          <q-icon name="check_circle" size="32px" color="teal" />
+          <q-icon name="fas fa-circle-check" size="32px" color="teal" />
           <div class="text-h5 text-weight-bold q-mt-xs">{{ stats.sessionsToday }}</div>
           <div class="text-caption text-grey-6">Check-ins Hoje</div>
         </q-card>

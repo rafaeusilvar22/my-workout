@@ -21,30 +21,30 @@
               </q-avatar>
             </template>
             <div class="avatar-overlay">
-              <q-icon v-if="!uploadingAvatar" name="photo_camera" color="white" size="20px" />
+              <q-icon v-if="!uploadingAvatar" name="fas fa-camera" color="white" size="20px" />
               <q-spinner v-else color="white" size="20px" />
             </div>
           </q-avatar>
           <div class="col">
             <div class="text-h6 text-weight-bold">{{ profile?.full_name || 'Sem nome' }}</div>
             <div v-if="profile?.phone" class="text-caption text-grey-6">
-              <q-icon name="phone" size="12px" class="q-mr-xs" />{{ profile.phone }}
+              <q-icon name="fas fa-phone" size="12px" class="q-mr-xs" />{{ profile.phone }}
             </div>
           </div>
         </div>
 
         <!-- Métricas -->
         <div v-if="hasMetrics" class="row q-gutter-xs flex-wrap q-mb-xs">
-          <q-chip v-if="age !== null" dense size="sm" icon="cake" color="blue-1" text-color="blue-9">
+          <q-chip v-if="age !== null" dense size="sm" icon="fas fa-cake-candles" color="blue-1" text-color="blue-9">
             {{ age }} anos
           </q-chip>
-          <q-chip v-if="profile?.height_cm" dense size="sm" icon="straighten" color="green-1" text-color="green-9">
+          <q-chip v-if="profile?.height_cm" dense size="sm" icon="fas fa-ruler" color="green-1" text-color="green-9">
             {{ profile.height_cm }} cm
           </q-chip>
-          <q-chip v-if="profile?.weight_kg" dense size="sm" icon="monitor_weight" color="orange-1" text-color="orange-9">
+          <q-chip v-if="profile?.weight_kg" dense size="sm" icon="fas fa-weight-scale" color="orange-1" text-color="orange-9">
             {{ profile.weight_kg }} kg
           </q-chip>
-          <q-chip v-if="profile?.body_fat_pct" dense size="sm" icon="water_drop" color="purple-1" text-color="purple-9">
+          <q-chip v-if="profile?.body_fat_pct" dense size="sm" icon="fas fa-droplet" color="purple-1" text-color="purple-9">
             {{ profile.body_fat_pct }}% gordura
           </q-chip>
         </div>
@@ -58,14 +58,14 @@
         <q-separator />
         <q-card-section class="q-pt-sm q-pb-sm q-gutter-sm">
           <div v-if="profile?.goal" class="row items-start no-wrap">
-            <q-icon name="flag" color="primary" size="16px" class="q-mr-sm" style="margin-top:2px" />
+            <q-icon name="fas fa-flag" color="primary" size="16px" class="q-mr-sm" style="margin-top:2px" />
             <div>
               <div class="text-caption text-grey-6">Meta</div>
               <div class="text-body2">{{ profile.goal }}</div>
             </div>
           </div>
           <div v-if="profile?.restrictions" class="row items-start no-wrap">
-            <q-icon name="warning" color="orange-8" size="16px" class="q-mr-sm" style="margin-top:2px" />
+            <q-icon name="fas fa-triangle-exclamation" color="orange-8" size="16px" class="q-mr-sm" style="margin-top:2px" />
             <div>
               <div class="text-caption text-grey-6">Restrições / Cirurgias</div>
               <div class="text-body2" style="white-space: pre-wrap;">{{ profile.restrictions }}</div>
@@ -95,7 +95,7 @@
           <div>
             <div class="text-h5 text-weight-bold text-orange">{{ streak }}</div>
             <div class="row items-center justify-center q-gutter-xs">
-              <q-icon name="local_fire_department" color="orange" size="14px" />
+              <q-icon name="fas fa-fire" color="orange" size="14px" />
               <span class="text-caption text-grey-6">sequência</span>
             </div>
           </div>

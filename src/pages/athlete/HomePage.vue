@@ -3,28 +3,39 @@
     <!-- Saudação -->
     <div class="row items-center q-mb-lg">
       <q-avatar size="52px" class="q-mr-md avatar-glass">
-        <img v-if="authStore.profile?.avatar_url" :src="authStore.profile.avatar_url" style="object-fit: cover;" />
+        <img
+          v-if="authStore.profile?.avatar_url"
+          :src="authStore.profile.avatar_url"
+          style="object-fit: cover"
+        />
         <span v-else class="text-h6 text-weight-bold text-primary">{{ firstName[0] }}</span>
       </q-avatar>
       <div class="col">
-        <div class="text-caption text-grey-5 q-mb-none" style="letter-spacing: 0.5px; text-transform: uppercase; font-size: 10px;">Bem-vindo de volta</div>
-        <div class="text-h6 text-weight-bold" style="line-height: 1.2; letter-spacing: -0.3px;">{{ firstName }}</div>
+        <div
+          class="text-caption text-grey-5 q-mb-none"
+          style="letter-spacing: 0.5px; text-transform: uppercase; font-size: 10px"
+        >
+          Bem-vindo de volta
+        </div>
+        <div class="text-h6 text-weight-bold" style="line-height: 1.2; letter-spacing: -0.3px">
+          {{ firstName }}
+        </div>
         <div class="text-caption text-grey-6">{{ todayLabel }}</div>
       </div>
     </div>
 
     <!-- Stats cards -->
     <div class="row q-gutter-sm q-mb-md">
-      <div class="col glass-card stat-card" style="border-top: 2px solid #FF6B00;">
-        <div class="stat-number" style="color: #FF6B00;">{{ streak }}</div>
+      <div class="col glass-card stat-card" style="border-top: 2px solid #ff6b00">
+        <div class="stat-number" style="color: #ff6b00">{{ streak }}</div>
         <div class="stat-label">Sequência</div>
       </div>
-      <div class="col glass-card stat-card" style="border-top: 2px solid var(--q-primary);">
+      <div class="col glass-card stat-card" style="border-top: 2px solid var(--q-primary)">
         <div class="stat-number text-primary">{{ completedCount }}</div>
         <div class="stat-label">Treinos</div>
       </div>
-      <div class="col glass-card stat-card" style="border-top: 2px solid #FFD32A;">
-        <div class="stat-number" style="color: #FFD32A;">{{ achievementsCount }}</div>
+      <div class="col glass-card stat-card" style="border-top: 2px solid #ffd32a">
+        <div class="stat-number" style="color: #ffd32a">{{ achievementsCount }}</div>
         <div class="stat-label">Badges</div>
       </div>
     </div>
@@ -33,12 +44,14 @@
     <div
       v-if="isGymClosedToday"
       class="glass-card q-pa-md q-mb-md row items-center no-wrap"
-      style="border-color: rgba(255, 71, 87, 0.35);"
+      style="border-color: rgba(255, 71, 87, 0.35)"
     >
-      <q-icon name="event_busy" color="negative" size="22px" class="q-mr-sm" />
+      <q-icon name="fas fa-calendar-xmark" color="negative" size="22px" class="q-mr-sm" />
       <div>
-        <span class="text-weight-medium" style="color: #FF4757;">Academia fechada hoje</span>
-        <span v-if="todayException?.reason" class="text-caption text-grey-5"> · {{ todayException.reason }}</span>
+        <span class="text-weight-medium" style="color: #ff4757">Academia fechada hoje</span>
+        <span v-if="todayException?.reason" class="text-caption text-grey-5">
+          · {{ todayException.reason }}</span
+        >
       </div>
     </div>
 
@@ -64,11 +77,13 @@
       <div
         v-if="inProgressSession && !todayCompletedSplit"
         class="glass-card q-mb-sm split-card cursor-pointer"
-        :style="{ borderLeft: `4px solid ${inProgressSession.training_splits?.color || '#ff8f00'}` }"
+        :style="{
+          borderLeft: `4px solid ${inProgressSession.training_splits?.color || '#ff8f00'}`,
+        }"
         @click="router.push(`/athlete/workout/${inProgressSession.split_id}`)"
       >
         <q-card-section class="row items-center no-wrap">
-          <q-icon name="play_circle" size="32px" class="q-mr-md text-orange" />
+          <q-icon name="fas fa-circle-play" size="32px" class="q-mr-md text-orange" />
           <div class="col">
             <div class="text-weight-bold text-orange">Continuar treino</div>
             <div class="text-caption text-grey-6">
@@ -76,8 +91,10 @@
             </div>
           </div>
           <q-btn
-            flat round dense
-            icon="delete_outline"
+            flat
+            round
+            dense
+            icon="far fa-trash-can"
             color="grey-5"
             @click.stop="confirmDiscard(inProgressSession)"
           />
@@ -95,7 +112,7 @@
         >
           <q-card-section class="row items-center no-wrap">
             <q-icon
-              name="check_circle"
+              name="fas fa-circle-check"
               size="32px"
               class="q-mr-md"
               :style="{ color: todayCompletedSplit.color || '#43a047' }"
@@ -157,19 +174,16 @@
                 {{ nextSplit.split_exercises?.length || 0 }} exercícios
               </div>
             </div>
-            <q-badge
-              text-color="white"
-              :style="{ background: nextSplit.color || '#1976d2' }"
-            >
+            <q-badge text-color="white" :style="{ background: nextSplit.color || '#1976d2' }">
               Iniciar
             </q-badge>
-            <q-icon name="chevron_right" color="grey-5" class="q-ml-sm" />
+            <q-icon name="fas fa-chevron-right" color="grey-5" class="q-ml-sm" />
           </q-card-section>
         </div>
       </template>
 
       <div v-else class="text-center text-grey-5 q-py-md">
-        <q-icon name="celebration" size="40px" color="orange" />
+        <q-icon name="fas fa-champagne-glasses" size="40px" color="orange" />
         <div class="q-mt-sm">Nenhum treino configurado na fase atual</div>
       </div>
 
@@ -178,7 +192,7 @@
         v-if="allSplits.length > 1"
         flat
         color="grey-7"
-        icon="swap_vert"
+        icon="fas fa-arrows-up-down"
         label="Escolher outro treino"
         size="sm"
         class="full-width q-mt-xs"
@@ -187,33 +201,40 @@
     </template>
 
     <div v-else class="text-center text-grey-5 q-py-xl">
-      <q-icon name="assignment_late" size="56px" />
+      <q-icon name="fas fa-clipboard-question" size="56px" />
       <div class="q-mt-sm">Você ainda não tem um programa ativo.</div>
       <div class="text-caption">Aguarde seu treinador prescrever um treino.</div>
     </div>
 
     <!-- Dialog detalhe da sessão -->
     <q-dialog v-model="sessionDetailSheet" position="bottom">
-      <q-card style="width: 100%; max-width: 600px;">
+      <q-card style="width: 100%; max-width: 600px">
         <div
           class="q-pa-md row items-center"
-          :style="{ background: selectedSession?.training_splits?.color || '#1976d2', borderRadius: '22px 22px 0 0' }"
+          :style="{
+            background: selectedSession?.training_splits?.color || '#1976d2',
+            borderRadius: '22px 22px 0 0',
+          }"
         >
           <div class="col">
             <div class="text-white text-weight-bold text-h6">
               {{ selectedSession?.training_splits?.name || 'Treino' }}
             </div>
-            <div class="text-caption" style="color:rgba(255,255,255,0.8)">
+            <div class="text-caption" style="color: rgba(255, 255, 255, 0.8)">
               {{ formatDateFull(selectedSession?.session_date) }}
-              <span v-if="selectedSession?.duration_minutes"> · {{ selectedSession.duration_minutes }} min</span>
+              <span v-if="selectedSession?.duration_minutes">
+                · {{ selectedSession.duration_minutes }} min</span
+              >
             </div>
           </div>
-          <q-btn flat round dense icon="close" text-color="white" v-close-popup />
+          <q-btn flat round dense icon="fas fa-xmark" text-color="white" v-close-popup />
         </div>
 
         <q-list padding>
           <q-item v-if="sessionLogs.length === 0">
-            <q-item-section class="text-grey-5 text-center">Nenhum exercício registrado</q-item-section>
+            <q-item-section class="text-grey-5 text-center"
+              >Nenhum exercício registrado</q-item-section
+            >
           </q-item>
 
           <q-item v-for="log in sessionLogs" :key="log.id" class="q-py-sm">
@@ -223,14 +244,16 @@
               </q-item-label>
               <q-item-label caption>
                 {{ log.sets_completed }} séries · {{ log.reps_completed }} reps
-                <span v-if="log.weight_kg"> · <strong>{{ log.weight_kg }} kg</strong></span>
+                <span v-if="log.weight_kg">
+                  · <strong>{{ log.weight_kg }} kg</strong></span
+                >
               </q-item-label>
               <q-item-label v-if="log.notes" caption class="text-grey-5 q-mt-xs">
                 {{ log.notes }}
               </q-item-label>
             </q-item-section>
             <q-item-section side>
-              <q-icon name="fitness_center" color="grey-4" />
+              <q-icon name="fas fa-dumbbell" color="grey-4" />
             </q-item-section>
           </q-item>
         </q-list>
@@ -239,11 +262,11 @@
 
     <!-- Dialog seletor de treino -->
     <q-dialog v-model="chooserSheet" position="bottom">
-      <q-card style="width: 100%; max-width: 600px;">
+      <q-card style="width: 100%; max-width: 600px">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-subtitle1 text-weight-bold">Escolher treino</div>
           <q-space />
-          <q-btn flat round dense icon="close" v-close-popup />
+          <q-btn flat round dense icon="fas fa-xmark" v-close-popup />
         </q-card-section>
 
         <q-list padding>
@@ -262,10 +285,7 @@
               @click="startSplit(split)"
             >
               <q-item-section avatar>
-                <div
-                  class="split-color-dot"
-                  :style="{ background: split.color || '#1976d2' }"
-                />
+                <div class="split-color-dot" :style="{ background: split.color || '#1976d2' }" />
               </q-item-section>
               <q-item-section>
                 <q-item-label class="text-weight-medium">{{ split.name }}</q-item-label>
@@ -281,7 +301,7 @@
                 >
                   Sugerido
                 </q-badge>
-                <q-icon v-else name="chevron_right" color="grey-4" />
+                <q-icon v-else name="fas fa-chevron-right" color="grey-4" />
               </q-item-section>
             </q-item>
           </template>
@@ -309,9 +329,15 @@ const loading = ref(true)
 const chooserSheet = ref(false)
 
 const d = new Date()
-const todayStr = [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-')
+const todayStr = [
+  d.getFullYear(),
+  String(d.getMonth() + 1).padStart(2, '0'),
+  String(d.getDate()).padStart(2, '0'),
+].join('-')
 const isGymClosedToday = computed(() => !scheduleStore.isGymOpen(todayStr))
-const todayException = computed(() => scheduleStore.exceptions.find(e => e.exception_date === todayStr))
+const todayException = computed(() =>
+  scheduleStore.exceptions.find((e) => e.exception_date === todayStr),
+)
 
 // Detalhe de sessão
 const sessionDetailSheet = ref(false)
@@ -328,31 +354,36 @@ async function openSessionDetail({ session }) {
 function formatDateFull(dateStr) {
   if (!dateStr) return ''
   return new Date(dateStr + 'T00:00:00').toLocaleDateString('pt-BR', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
   })
 }
 
 const firstName = computed(() => (authStore.profile?.full_name || 'Atleta').split(' ')[0])
 const streak = computed(() => sessionsStore.getStreak())
-const completedCount = computed(() => sessionsStore.sessions.filter(s => s.completed).length)
+const completedCount = computed(() => sessionsStore.sessions.filter((s) => s.completed).length)
 const achievementsCount = computed(() => sessionsStore.achievements.length)
 
 const todayLabel = computed(() => {
   return new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
 })
 
-const nextSplit = computed(() =>
-  sessionsStore.getNextSplit(sessionsStore.activeProgram)
-)
+const nextSplit = computed(() => sessionsStore.getNextSplit(sessionsStore.activeProgram))
 
 const todayCompletedSplit = computed(() =>
-  sessionsStore.getTodayCompletedSplit(sessionsStore.activeProgram)
+  sessionsStore.getTodayCompletedSplit(sessionsStore.activeProgram),
 )
 
 const inProgressSession = computed(() => {
   const now = new Date()
-  const today = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-')
-  return sessionsStore.sessions.find(s => s.session_date === today && !s.completed) || null
+  const today = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0'),
+  ].join('-')
+  return sessionsStore.sessions.find((s) => s.session_date === today && !s.completed) || null
 })
 
 // Todos os splits do programa ativo (para o seletor)
@@ -375,7 +406,6 @@ function hexToFaded(hex) {
   const b = parseInt(hex.slice(5, 7), 16)
   return `rgba(${r}, ${g}, ${b}, 0.1)`
 }
-
 
 function confirmDiscard(session) {
   $q.dialog({

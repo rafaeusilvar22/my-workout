@@ -1,5 +1,48 @@
 // ── Global component overrides ────────────────────────────────
 
+// ── Toolbar transparente ──────────────────────────────────────
+
+.transparent-header {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.transparent-header .q-toolbar {
+  background: transparent;
+}
+
+// ── iOS glass buttons ─────────────────────────────────────────
+
+.ios-glass-btn.q-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.7) !important;
+  width: 30px;
+  height: 30px;
+  font-size: 11px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ios-glass-btn.q-btn:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+body.body--light .ios-glass-btn.q-btn {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.07) !important;
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+body.body--light .ios-glass-btn.q-btn:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+
 // ── Dialogs ───────────────────────────────────────────────────
 
 .q-dialog__backdrop {

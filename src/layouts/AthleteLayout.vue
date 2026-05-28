@@ -1,33 +1,43 @@
 <template>
   <div class="layout-wrapper">
-  <q-layout view="lHh lpr lFf">
-    <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'" :style="$q.dark.isActive ? 'border-bottom: 1px solid rgba(255,255,255,0.08)' : 'border-bottom: 1px solid rgba(0,0,0,0.08)'">
-      <q-toolbar>
-        <q-icon name="fitness_center" size="28px" class="q-mr-sm text-primary" />
-        <q-toolbar-title class="text-weight-bold text-primary">My Workout</q-toolbar-title>
-        <q-space />
-        <q-btn flat dense round :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'" :class="$q.dark.isActive ? 'text-white' : 'text-dark'" @click="toggleTheme" />
-        <q-btn flat dense round icon="logout" :class="$q.dark.isActive ? 'text-white' : 'text-dark'" @click="handleLogout" />
-      </q-toolbar>
-    </q-header>
+    <q-layout view="lHh lpr lFf">
+      <q-header class="transparent-header">
+        <q-toolbar>
+          <q-space />
+          <q-btn
+            flat
+            round
+            :icon="$q.dark.isActive ? 'fas fa-sun' : 'fas fa-moon'"
+            class="ios-glass-btn q-mr-xs"
+            @click="toggleTheme"
+          />
+          <q-btn
+            flat
+            round
+            icon="fas fa-right-from-bracket"
+            class="ios-glass-btn"
+            @click="handleLogout"
+          />
+        </q-toolbar>
+      </q-header>
 
-    <q-page-container>
-      <router-view />
-    </q-page-container>
+      <q-page-container>
+        <router-view />
+      </q-page-container>
 
-    <q-footer class="athlete-footer" :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'">
-      <q-tabs
-        active-color="primary"
-        indicator-color="primary"
-        align="justify"
-        class="athlete-tabs"
-      >
-        <q-route-tab to="/athlete/home" icon="home" label="Hoje" exact />
-        <q-route-tab to="/athlete/progress" icon="emoji_events" label="Conquistas" exact />
-        <q-route-tab to="/athlete/profile" icon="person" label="Perfil" exact />
-      </q-tabs>
-    </q-footer>
-  </q-layout>
+      <q-footer class="athlete-footer" :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'">
+        <q-tabs
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
+          class="athlete-tabs"
+        >
+          <q-route-tab to="/athlete/home" icon="fas fa-house" label="Início" exact />
+          <q-route-tab to="/athlete/progress" icon="fas fa-trophy" label="Conquistas" exact />
+          <q-route-tab to="/athlete/profile" icon="fas fa-user" label="Perfil" exact />
+        </q-tabs>
+      </q-footer>
+    </q-layout>
   </div>
 </template>
 

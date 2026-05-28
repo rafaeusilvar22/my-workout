@@ -9,7 +9,7 @@
     />
 
     <div class="row items-center q-mb-md">
-      <q-btn flat round dense icon="arrow_back" @click="$router.back()" class="q-mr-sm" />
+      <q-btn flat round dense icon="fas fa-arrow-left" @click="$router.back()" class="q-mr-sm" />
       <div class="text-h6 text-weight-bold">{{ athlete?.full_name || 'Aluno' }}</div>
     </div>
 
@@ -30,31 +30,31 @@
                 </q-avatar>
               </template>
               <div class="avatar-overlay">
-                <q-icon v-if="!uploadingAvatar" name="photo_camera" color="white" size="18px" />
+                <q-icon v-if="!uploadingAvatar" name="fas fa-camera" color="white" size="18px" />
                 <q-spinner v-else color="white" size="18px" />
               </div>
             </q-avatar>
             <div class="col">
               <div class="text-weight-bold text-body1">{{ athlete?.full_name || 'Sem nome' }}</div>
               <div v-if="athlete?.phone" class="text-caption text-grey-6">
-                <q-icon name="phone" size="12px" class="q-mr-xs" />{{ athlete.phone }}
+                <q-icon name="fas fa-phone" size="12px" class="q-mr-xs" />{{ athlete.phone }}
               </div>
             </div>
-            <q-btn flat round dense icon="edit" color="grey-6" @click="openEditProfile" />
+            <q-btn flat round dense icon="fas fa-pen" color="grey-6" @click="openEditProfile" />
           </div>
 
           <!-- Chips de métricas -->
           <div class="row q-gutter-xs flex-wrap">
-            <q-chip v-if="athleteAge !== null" dense size="sm" icon="cake" color="blue-1" text-color="blue-9">
+            <q-chip v-if="athleteAge !== null" dense size="sm" icon="fas fa-cake-candles" color="blue-1" text-color="blue-9">
               {{ athleteAge }} anos
             </q-chip>
-            <q-chip v-if="athlete?.height_cm" dense size="sm" icon="straighten" color="green-1" text-color="green-9">
+            <q-chip v-if="athlete?.height_cm" dense size="sm" icon="fas fa-ruler" color="green-1" text-color="green-9">
               {{ athlete.height_cm }} cm
             </q-chip>
-            <q-chip v-if="athlete?.weight_kg" dense size="sm" icon="monitor_weight" color="orange-1" text-color="orange-9">
+            <q-chip v-if="athlete?.weight_kg" dense size="sm" icon="fas fa-weight-scale" color="orange-1" text-color="orange-9">
               {{ athlete.weight_kg }} kg
             </q-chip>
-            <q-chip v-if="athlete?.body_fat_pct" dense size="sm" icon="water_drop" color="purple-1" text-color="purple-9">
+            <q-chip v-if="athlete?.body_fat_pct" dense size="sm" icon="fas fa-droplet" color="purple-1" text-color="purple-9">
               {{ athlete.body_fat_pct }}% gordura
             </q-chip>
           </div>
@@ -68,14 +68,14 @@
           <q-separator />
           <q-card-section class="q-pt-sm q-pb-sm q-gutter-sm">
             <div v-if="athlete?.goal" class="row items-start no-wrap">
-              <q-icon name="flag" color="primary" size="16px" class="q-mr-sm" style="margin-top:2px" />
+              <q-icon name="fas fa-flag" color="primary" size="16px" class="q-mr-sm" style="margin-top:2px" />
               <div>
                 <div class="text-caption text-grey-6">Meta</div>
                 <div class="text-body2">{{ athlete.goal }}</div>
               </div>
             </div>
             <div v-if="athlete?.restrictions" class="row items-start no-wrap">
-              <q-icon name="warning" color="orange-8" size="16px" class="q-mr-sm" style="margin-top:2px" />
+              <q-icon name="fas fa-triangle-exclamation" color="orange-8" size="16px" class="q-mr-sm" style="margin-top:2px" />
               <div>
                 <div class="text-caption text-grey-6">Restrições / Cirurgias</div>
                 <div class="text-body2" style="white-space: pre-wrap;">{{ athlete.restrictions }}</div>
@@ -89,14 +89,14 @@
       <div class="row items-center justify-between q-mb-sm">
         <div class="text-subtitle1 text-weight-medium">Programas</div>
         <div class="row q-gutter-xs">
-          <q-btn outline color="primary" icon="assessment" label="Relatório" size="sm"
+          <q-btn outline color="primary" icon="fas fa-chart-bar" label="Relatório" size="sm"
             :to="`/trainer/athletes/${route.params.id}/report`" />
-          <q-btn color="primary" icon="add" label="Novo Programa" unelevated size="sm" @click="openNewProgram" />
+          <q-btn color="primary" icon="fas fa-plus" label="Novo Programa" unelevated size="sm" @click="openNewProgram" />
         </div>
       </div>
 
       <div v-if="athletePrograms.length === 0" class="text-center text-grey-5 q-py-md">
-        <q-icon name="assignment_late" size="40px" />
+        <q-icon name="fas fa-clipboard-question" size="40px" />
         <div class="q-mt-sm text-caption">Nenhum programa criado</div>
       </div>
 

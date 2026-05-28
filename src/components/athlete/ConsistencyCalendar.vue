@@ -2,14 +2,14 @@
   <div class="glass-card q-pa-lg">
     <!-- Navegação de semana -->
     <div class="row items-center q-mb-lg">
-      <q-btn flat round dense icon="chevron_left" color="grey-5" @click="prevWeek" />
+      <q-btn flat round dense icon="fas fa-chevron-left" color="grey-5" @click="prevWeek" />
       <div class="col text-center">
         <div class="text-weight-bold" style="font-size: 17px; letter-spacing: -0.3px;">{{ weekLabel }}</div>
         <div v-if="activePhase" class="text-caption text-grey-5 q-mt-xs">
           {{ activePhase.name }} · sem. {{ activePhase.week_start }}–{{ activePhase.week_end }}
         </div>
       </div>
-      <q-btn flat round dense icon="chevron_right" color="grey-5" :disable="isCurrentWeek" @click="nextWeek" />
+      <q-btn flat round dense icon="fas fa-chevron-right" color="grey-5" :disable="isCurrentWeek" @click="nextWeek" />
     </div>
 
     <!-- Dias da semana -->

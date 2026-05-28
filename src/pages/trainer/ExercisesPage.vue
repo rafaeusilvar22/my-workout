@@ -2,7 +2,7 @@
   <q-page class="q-pa-md">
     <div class="row items-center justify-between q-mb-md">
       <div class="text-h6 text-weight-bold">Catálogo de Exercícios</div>
-      <q-btn color="primary" icon="add" label="Novo" unelevated @click="openDialog()" />
+      <q-btn color="primary" icon="fas fa-plus" label="Novo" unelevated @click="openDialog()" />
     </div>
 
     <q-input
@@ -12,7 +12,7 @@
       class="q-mb-md"
       clearable
     >
-      <template #prepend><q-icon name="search" /></template>
+      <template #prepend><q-icon name="fas fa-magnifying-glass" /></template>
     </q-input>
 
     <div v-if="exercisesStore.loading" class="flex flex-center q-py-xl">
@@ -20,7 +20,7 @@
     </div>
 
     <div v-else-if="filtered.length === 0" class="text-center text-grey-5 q-py-xl">
-      <q-icon name="fitness_center" size="48px" />
+      <q-icon name="fas fa-dumbbell" size="48px" />
       <div class="q-mt-sm">Nenhum exercício encontrado</div>
     </div>
 
@@ -31,7 +31,7 @@
             <img :src="ex.image_url" style="object-fit: cover;" />
           </q-avatar>
           <q-avatar v-else color="primary" text-color="white" size="40px">
-            <q-icon name="fitness_center" size="20px" />
+            <q-icon name="fas fa-dumbbell" size="20px" />
           </q-avatar>
         </q-item-section>
         <q-item-section>
@@ -41,7 +41,7 @@
           </q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn flat round dense icon="delete" color="negative" @click.stop="confirmDelete(ex)" />
+          <q-btn flat round dense icon="fas fa-trash" color="negative" @click.stop="confirmDelete(ex)" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -76,25 +76,25 @@
               >
                 <img :src="previewUrl || editing?.image_url" />
                 <div class="image-preview__overlay">
-                  <q-icon name="edit" color="white" size="20px" />
+                  <q-icon name="fas fa-pen" color="white" size="20px" />
                 </div>
               </div>
 
               <div class="col">
                 <q-btn
                   v-if="!previewUrl && !editing?.image_url"
-                  outline color="primary" icon="upload" label="Enviar imagem"
+                  outline color="primary" icon="fas fa-arrow-up-from-bracket" label="Enviar imagem"
                   size="sm" :loading="uploadingImage"
                   @click="$refs.fileInput.click()"
                 />
                 <template v-else>
                   <q-btn
-                    outline color="primary" icon="upload" label="Trocar"
+                    outline color="primary" icon="fas fa-arrow-up-from-bracket" label="Trocar"
                     size="sm" :loading="uploadingImage"
                     @click="$refs.fileInput.click()"
                   />
                   <q-btn
-                    flat color="negative" icon="delete" label="Remover"
+                    flat color="negative" icon="fas fa-trash" label="Remover"
                     size="sm" class="q-ml-xs"
                     @click="handleRemoveImage"
                   />
@@ -242,7 +242,7 @@ async function handleSave() {
   if (pendingFile.value && data?.id) {
     const { error: uploadError } = await exercisesStore.uploadImage(data.id, pendingFile.value)
     if (uploadError) {
-      $q.notify({ type: 'warning', message: `Exercício criado, mas falha no upload: ${uploadError.message}` })
+      $q.notify({ type: 'fas fa-triangle-exclamation', message: `Exercício criado, mas falha no upload: ${uploadError.message}` })
     }
   }
 

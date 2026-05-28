@@ -5,7 +5,7 @@
     </div>
 
     <q-input v-model="search" outlined dense placeholder="Buscar aluno..." class="q-mb-md" clearable>
-      <template #prepend><q-icon name="search" /></template>
+      <template #prepend><q-icon name="fas fa-magnifying-glass" /></template>
     </q-input>
 
     <div v-if="loading" class="flex flex-center q-py-xl">
@@ -13,7 +13,7 @@
     </div>
 
     <div v-else-if="filtered.length === 0" class="text-center text-grey-5 q-py-xl">
-      <q-icon name="group_off" size="48px" />
+      <q-icon name="fas fa-users-slash" size="48px" />
       <div class="q-mt-sm">Nenhum aluno encontrado</div>
     </div>
 

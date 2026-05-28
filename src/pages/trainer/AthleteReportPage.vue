@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <div class="row items-center q-mb-md">
-      <q-btn flat round dense icon="arrow_back" @click="$router.back()" class="q-mr-sm" />
+      <q-btn flat round dense icon="fas fa-arrow-left" @click="$router.back()" class="q-mr-sm" />
       <div class="col">
         <div class="text-h6 text-weight-bold">Relatório do Aluno</div>
         <div class="text-caption text-grey-6">{{ athlete?.full_name }}</div>
@@ -20,13 +20,13 @@
           <div class="text-caption text-grey-6 q-mb-sm">{{ currentProgram.name }}</div>
 
           <div class="row q-gutter-xs q-mb-md flex-wrap">
-            <q-chip dense size="sm" icon="today" color="primary" text-color="white">
+            <q-chip dense size="sm" icon="fas fa-calendar-day" color="primary" text-color="white">
               Semana {{ currentWeek }}/{{ totalWeeks }}
             </q-chip>
-            <q-chip dense size="sm" icon="fitness_center" color="green-1" text-color="green-9">
+            <q-chip dense size="sm" icon="fas fa-dumbbell" color="green-1" text-color="green-9">
               {{ completedCount }} sessões
             </q-chip>
-            <q-chip dense size="sm" icon="schedule" color="orange-1" text-color="orange-9">
+            <q-chip dense size="sm" icon="fas fa-clock" color="orange-1" text-color="orange-9">
               {{ daysRemaining > 0 ? `${daysRemaining} dias restantes` : 'Programa encerrado' }}
             </q-chip>
           </div>
@@ -50,7 +50,7 @@
           <div class="text-subtitle1 text-weight-bold q-mb-sm">Medidas Corporais</div>
 
           <div v-if="measurementsStore.measurements.length === 0" class="text-center text-grey-5 q-py-lg">
-            <q-icon name="monitor_weight" size="40px" />
+            <q-icon name="fas fa-weight-scale" size="40px" />
             <div class="q-mt-sm text-caption">Sem medidas. Adicione a primeira medida abaixo.</div>
           </div>
 
@@ -70,7 +70,7 @@
           <div class="text-subtitle1 text-weight-bold q-mb-sm">Frequência Semanal</div>
 
           <div v-if="athleteSessions.length === 0" class="text-center text-grey-5 q-py-lg">
-            <q-icon name="event_busy" size="40px" />
+            <q-icon name="fas fa-calendar-xmark" size="40px" />
             <div class="q-mt-sm text-caption">Sem sessões registadas.</div>
           </div>
 
@@ -125,7 +125,7 @@
         <q-card-section>
           <div class="row items-center justify-between q-mb-sm">
             <div class="text-subtitle1 text-weight-bold">Histórico de Medidas</div>
-            <q-btn color="primary" icon="add" label="Nova medida" unelevated size="sm" @click="openAddMeasurement" />
+            <q-btn color="primary" icon="fas fa-plus" label="Nova medida" unelevated size="sm" @click="openAddMeasurement" />
           </div>
 
           <q-table
@@ -142,7 +142,7 @@
             </template>
             <template #body-cell-delete="props">
               <q-td :props="props">
-                <q-btn flat round dense icon="delete" color="negative" size="sm"
+                <q-btn flat round dense icon="fas fa-trash" color="negative" size="sm"
                   @click="confirmDeleteMeasurement(props.row)" />
               </q-td>
             </template>
@@ -406,7 +406,7 @@ const measurementColumns = [
   { name: 'body_fat_pct', label: 'Gordura (%)', field: 'body_fat_pct', align: 'center' },
   { name: 'muscle_mass_kg', label: 'Massa (kg)', field: 'muscle_mass_kg', align: 'center' },
   { name: 'notes', label: 'Obs.', field: 'notes', align: 'left' },
-  { name: 'delete', label: '', field: 'id', align: 'center' },
+  { name: 'fas fa-trash', label: '', field: 'id', align: 'center' },
 ]
 
 function formatDate(dateStr) {

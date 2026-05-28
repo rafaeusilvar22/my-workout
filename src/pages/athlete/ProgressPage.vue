@@ -1,9 +1,9 @@
 <template>
   <q-page>
     <q-tabs v-model="activeTab" align="justify" dense class="shadow-1">
-      <q-tab name="achievements" icon="emoji_events" label="Conquistas" />
-      <q-tab name="evolution" icon="trending_up" label="Evolução" />
-      <q-tab name="measures" icon="straighten" label="Medidas" />
+      <q-tab name="achievements" icon="fas fa-trophy" label="Conquistas" />
+      <q-tab name="evolution" icon="fas fa-arrow-trend-up" label="Evolução" />
+      <q-tab name="measures" icon="fas fa-ruler" label="Medidas" />
     </q-tabs>
 
     <q-separator />
@@ -14,21 +14,21 @@
         <div class="row q-col-gutter-sm q-mb-lg">
           <div class="col-4">
             <q-card flat bordered class="text-center q-pa-sm">
-              <q-icon name="local_fire_department" color="orange" size="28px" />
+              <q-icon name="fas fa-fire" color="orange" size="28px" />
               <div class="text-h6 text-weight-bold">{{ streak }}</div>
               <div class="text-caption text-grey-6">Sequência</div>
             </q-card>
           </div>
           <div class="col-4">
             <q-card flat bordered class="text-center q-pa-sm">
-              <q-icon name="check_circle" color="positive" size="28px" />
+              <q-icon name="fas fa-circle-check" color="positive" size="28px" />
               <div class="text-h6 text-weight-bold">{{ completedCount }}</div>
               <div class="text-caption text-grey-6">Treinos</div>
             </q-card>
           </div>
           <div class="col-4">
             <q-card flat bordered class="text-center q-pa-sm">
-              <q-icon name="emoji_events" color="amber" size="28px" />
+              <q-icon name="fas fa-trophy" color="amber" size="28px" />
               <div class="text-h6 text-weight-bold">{{ sessionsStore.achievements.length }}</div>
               <div class="text-caption text-grey-6">Badges</div>
             </q-card>
@@ -42,7 +42,7 @@
         </div>
 
         <div v-else-if="sessionsStore.achievements.length === 0" class="text-center text-grey-5 q-py-md">
-          <q-icon name="emoji_events" size="48px" />
+          <q-icon name="fas fa-trophy" size="48px" />
           <div class="q-mt-sm">Nenhuma conquista ainda — continue treinando!</div>
         </div>
 
@@ -74,7 +74,7 @@
                     <q-chip
                       v-if="challenge.progress >= 1"
                       dense size="sm"
-                      icon="check"
+                      icon="fas fa-check"
                       color="positive"
                       text-color="white"
                       class="q-ml-sm"
@@ -111,7 +111,7 @@
         <div class="text-h6 text-weight-bold q-mb-md">Evolução de Carga</div>
 
         <div v-if="!sessionsStore.activeProgram" class="text-center text-grey-5 q-py-xl">
-          <q-icon name="fitness_center" size="48px" />
+          <q-icon name="fas fa-dumbbell" size="48px" />
           <div class="q-mt-sm">Você não possui um programa ativo.</div>
         </div>
 
@@ -151,7 +151,7 @@
       <q-tab-panel name="measures" class="q-pa-md">
         <div class="row items-center justify-between q-mb-md">
           <div class="text-h6 text-weight-bold">Medidas Corporais</div>
-          <q-btn unelevated color="primary" icon="add" label="Registrar" size="sm" @click="openAddMeasurement" />
+          <q-btn unelevated color="primary" icon="fas fa-plus" label="Registrar" size="sm" @click="openAddMeasurement" />
         </div>
 
         <div v-if="loadingMeasures" class="flex flex-center q-py-xl">
@@ -159,9 +159,9 @@
         </div>
 
         <div v-else-if="measurementsStore.measurements.length === 0" class="text-center text-grey-5 q-py-xl">
-          <q-icon name="monitor_weight" size="48px" />
+          <q-icon name="fas fa-weight-scale" size="48px" />
           <div class="q-mt-sm q-mb-md">Nenhuma medida registrada ainda.</div>
-          <q-btn unelevated color="primary" icon="add" label="Registrar primeira medida" @click="openAddMeasurement" />
+          <q-btn unelevated color="primary" icon="fas fa-plus" label="Registrar primeira medida" @click="openAddMeasurement" />
         </div>
 
         <template v-else>
@@ -176,13 +176,13 @@
             <q-card-section>
               <div class="text-subtitle2 text-weight-bold q-mb-sm">Última medida</div>
               <div class="row q-gutter-sm">
-                <q-chip v-if="lastMeasurement.weight_kg != null" icon="monitor_weight" color="green-9" text-color="white" dense>
+                <q-chip v-if="lastMeasurement.weight_kg != null" icon="fas fa-weight-scale" color="green-9" text-color="white" dense>
                   {{ lastMeasurement.weight_kg }} kg
                 </q-chip>
-                <q-chip v-if="lastMeasurement.body_fat_pct != null" icon="water_drop" color="cyan-9" text-color="white" dense>
+                <q-chip v-if="lastMeasurement.body_fat_pct != null" icon="fas fa-droplet" color="cyan-9" text-color="white" dense>
                   {{ lastMeasurement.body_fat_pct }}% gordura
                 </q-chip>
-                <q-chip v-if="lastMeasurement.muscle_mass_kg != null" icon="fitness_center" color="orange-9" text-color="white" dense>
+                <q-chip v-if="lastMeasurement.muscle_mass_kg != null" icon="fas fa-dumbbell" color="orange-9" text-color="white" dense>
                   {{ lastMeasurement.muscle_mass_kg }} kg músculo
                 </q-chip>
               </div>
@@ -285,12 +285,12 @@ const completedCount = computed(() => sessionsStore.sessions.filter(s => s.compl
 const earnedTypes = computed(() => new Set(sessionsStore.achievements.map(a => a.type)))
 
 const allBadges = [
-  { type: 'first_session', icon: 'star',                  color: 'amber',       label: 'Primeira Sessão',     target: 1   },
+  { type: 'first_session', icon: 'fas fa-star',                  color: 'amber',       label: 'Primeira Sessão',     target: 1   },
   { type: '10_sessions',   icon: 'military_tech',          color: 'blue',        label: '10 Sessões',          target: 10  },
   { type: '25_sessions',   icon: 'workspace_premium',      color: 'teal',        label: '25 Sessões',          target: 25  },
   { type: '50_sessions',   icon: 'diamond',                color: 'purple',      label: '50 Sessões',          target: 50  },
-  { type: '100_sessions',  icon: 'emoji_events',           color: 'deep-orange', label: '100 Sessões',         target: 100 },
-  { type: 'streak_7',      icon: 'local_fire_department',  color: 'orange',      label: '7 Dias Seguidos',     target: 7   },
+  { type: '100_sessions',  icon: 'fas fa-trophy',           color: 'deep-orange', label: '100 Sessões',         target: 100 },
+  { type: 'streak_7',      icon: 'fas fa-fire',  color: 'orange',      label: '7 Dias Seguidos',     target: 7   },
   { type: 'streak_14',     icon: 'whatshot',               color: 'red',         label: '14 Dias Seguidos',    target: 14  },
   { type: 'streak_30',     icon: 'bolt',                   color: 'yellow',      label: '30 Dias Seguidos',    target: 30  },
 ]
@@ -328,7 +328,7 @@ const weeklyChallenges = computed(() => {
   return [
     {
       id: 'week_4_sessions',
-      icon: 'fitness_center',
+      icon: 'fas fa-dumbbell',
       color: 'primary',
       label: '4 Treinos na Semana',
       description: 'Complete 4 treinos nesta semana',
@@ -338,7 +338,7 @@ const weeklyChallenges = computed(() => {
     },
     {
       id: 'streak_3',
-      icon: 'local_fire_department',
+      icon: 'fas fa-fire',
       color: 'orange',
       label: '3 Dias Seguidos',
       description: 'Mantenha uma sequência de 3 dias',
@@ -456,7 +456,7 @@ function openAddMeasurement() {
 
 async function handleAddMeasurement() {
   if (!measurementForm.value.measured_at) {
-    $q.notify({ type: 'warning', message: 'Informe a data da medida.' })
+    $q.notify({ type: 'fas fa-triangle-exclamation', message: 'Informe a data da medida.' })
     return
   }
   savingMeasurement.value = true

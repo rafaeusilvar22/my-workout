@@ -1,14 +1,12 @@
 <template>
   <div class="layout-wrapper">
   <q-layout view="lHh Lpr lFf">
-    <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'" :style="headerBorder">
+    <q-header class="transparent-header">
       <q-toolbar>
-        <q-btn flat dense round icon="menu" @click="drawer = !drawer" class="lt-md" :class="$q.dark.isActive ? 'text-white' : 'text-dark'" />
-        <q-icon name="fitness_center" size="28px" class="q-mr-sm text-primary" />
-        <q-toolbar-title class="text-weight-bold text-primary">My Workout</q-toolbar-title>
+        <q-btn flat round icon="fas fa-bars" @click="drawer = !drawer" class="lt-md ios-glass-btn" />
         <q-space />
-        <q-btn flat dense round :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'" :class="$q.dark.isActive ? 'text-white' : 'text-dark'" @click="toggleTheme" />
-        <q-btn flat dense round icon="logout" :class="$q.dark.isActive ? 'text-white' : 'text-dark'" @click="handleLogout" />
+        <q-btn flat round :icon="$q.dark.isActive ? 'fas fa-sun' : 'fas fa-moon'" class="ios-glass-btn q-mr-xs" @click="toggleTheme" />
+        <q-btn flat round icon="fas fa-right-from-bracket" class="ios-glass-btn" @click="handleLogout" />
       </q-toolbar>
     </q-header>
 
@@ -84,12 +82,6 @@ const authStore = useAuthStore()
 const $q = useQuasar()
 const drawer = ref(false)
 
-const headerBorder = computed(() =>
-  $q.dark.isActive
-    ? 'border-bottom: 1px solid rgba(255,255,255,0.08)'
-    : 'border-bottom: 1px solid rgba(0,0,0,0.08)'
-)
-
 const drawerBorder = computed(() =>
   $q.dark.isActive
     ? 'border-right: 1px solid rgba(255,255,255,0.08)'
@@ -102,10 +94,10 @@ function toggleTheme() {
 }
 
 const navItems = [
-  { label: 'Início', icon: 'dashboard', to: '/trainer/dashboard' },
-  { label: 'Alunos', icon: 'group', to: '/trainer/athletes' },
-  { label: 'Exercícios', icon: 'fitness_center', to: '/trainer/exercises' },
-  { label: 'Horários', icon: 'event_available', to: '/trainer/schedule' },
+  { label: 'Início', icon: 'fas fa-gauge', to: '/trainer/dashboard' },
+  { label: 'Alunos', icon: 'fas fa-users', to: '/trainer/athletes' },
+  { label: 'Exercícios', icon: 'fas fa-dumbbell', to: '/trainer/exercises' },
+  { label: 'Horários', icon: 'fas fa-calendar-check', to: '/trainer/schedule' },
 ]
 
 const initials = computed(() => {
