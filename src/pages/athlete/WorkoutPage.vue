@@ -7,7 +7,10 @@
           <i class="fas fa-arrow-left" />
         </button>
         <q-space />
-        <div class="workout-timer">{{ elapsedFormatted }}</div>
+        <div class="timer-pill">
+          <i class="fas fa-stopwatch timer-pill__icon" />
+          <span class="timer-pill__value">{{ elapsedFormatted }}</span>
+        </div>
         <q-space />
         <button class="header-btn" @click="confirmDiscard">
           <i class="far fa-trash-can" />
@@ -17,8 +20,11 @@
       <div class="text-h5 text-weight-bold text-white q-mb-xs" style="letter-spacing: -0.5px;">
         {{ split?.name || 'Treino' }}
       </div>
-      <div class="text-caption q-mb-md" style="color: rgba(255,255,255,0.65)">
-        {{ doneCount }}/{{ exercises.length }} exercícios concluídos
+      <div class="q-mb-md">
+        <span class="done-count-chip">
+          <i class="fas fa-circle-check done-count-chip__icon" />
+          <span>{{ doneCount }}/{{ exercises.length }} exercícios</span>
+        </span>
       </div>
 
       <q-linear-progress
@@ -145,18 +151,23 @@
           </div>
         </template>
 
-        <q-btn
-          color="positive"
-          label="Finalizar Treino"
-          icon="fas fa-circle-check"
-          class="full-width q-mt-md"
-          size="lg"
-          unelevated
-          :loading="finishing"
-          :disable="doneCount === 0"
-          style="border-radius: 16px;"
+        <button
+          class="finish-btn q-mt-md"
+          :class="{
+            'finish-btn--partial': doneCount > 0 && doneCount < exercises.length,
+            'finish-btn--ready': exercises.length > 0 && doneCount === exercises.length,
+          }"
+          :disabled="doneCount === 0 || finishing"
           @click="finishWorkout"
-        />
+        >
+          <span class="finish-btn__inner">
+            <q-spinner v-if="finishing" color="white" size="18px" />
+            <template v-else>
+              <i class="fas fa-circle-check" />
+              <span>Finalizar Treino</span>
+            </template>
+          </span>
+        </button>
       </template>
     </div>
 
@@ -398,12 +409,30 @@ onUnmounted(() => clearInterval(timer))
   padding: 20px 16px 24px;
 }
 
-.workout-timer {
-  font-size: 20px;
+.timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-pill__icon {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.timer-pill__value {
+  font-size: 17px;
   font-weight: 800;
   color: white;
-  letter-spacing: 2px;
-  font-variant-numeric: tabular-nums;
+  letter-spacing: 2.5px;
 }
 
 .header-btn {
@@ -477,26 +506,72 @@ onUnmounted(() => clearInterval(timer))
   letter-spacing: 0.5px;
 }
 
+/* ── Done count chip ── */
+.done-count-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+  letter-spacing: 0.2px;
+}
+
+.done-count-chip__icon {
+  font-size: 11px;
+  opacity: 0.72;
+}
+
 /* ── Done button ── */
 .done-btn {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 1.5px solid rgba(128, 128, 128, 0.25);
-  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.2s ease;
-  color: rgba(128, 128, 128, 0.35);
-  font-size: 11px;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: rgba(255, 255, 255, 0.22);
+  font-size: 13px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.done-btn:active {
+  transform: scale(0.86);
+  transition: transform 0.1s ease;
 }
 
 .done-btn--active {
   color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.06);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28), 0 0 0 3px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* ── Done button: light theme overrides ── */
+:global(body.body--light .done-btn) {
+  border-color: rgba(0, 0, 0, 0.18);
+  background: rgba(0, 0, 0, 0.04);
+  color: rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+:global(body.body--light .done-btn--active) {
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2), 0 0 0 3px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 /* ── Exercise image ── */
@@ -524,6 +599,65 @@ onUnmounted(() => clearInterval(timer))
 
 .workout-input--note :deep(.q-field__control) {
   background: rgba(255, 211, 42, 0.07);
+}
+
+/* ── Finish button ── */
+.finish-btn {
+  width: 100%;
+  padding: 18px 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.25);
+  font-family: inherit;
+}
+
+.finish-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.finish-btn--partial {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.28);
+  color: #81c784;
+}
+
+.finish-btn--ready {
+  background: linear-gradient(145deg, rgba(76, 175, 80, 0.92), rgba(46, 125, 50, 0.96));
+  border-color: rgba(255, 255, 255, 0.18);
+  color: white;
+  animation: finish-glow 2.2s ease-in-out infinite;
+}
+
+.finish-btn:not(:disabled):active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
+.finish-btn__inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+@keyframes finish-glow {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(76, 175, 80, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 8px 42px rgba(76, 175, 80, 0.65), 0 0 0 5px rgba(76, 175, 80, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
 }
 
 /* ── Info btn pulse ── */

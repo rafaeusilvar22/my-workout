@@ -166,10 +166,10 @@
                 {{ nextSplit.split_exercises?.length || 0 }} exercícios
               </div>
             </div>
-            <q-badge text-color="white" :style="{ background: nextSplit.color || '#1976d2' }">
-              Iniciar
-            </q-badge>
-            <q-icon name="fas fa-chevron-right" color="grey-5" class="q-ml-sm" />
+            <div class="start-pill" :style="{ background: nextSplit.color || '#1976d2' }">
+              <i class="fas fa-play start-pill__icon" />
+              <span>Iniciar</span>
+            </div>
           </q-card-section>
         </div>
       </template>
@@ -473,5 +473,24 @@ onMounted(async () => {
   letter-spacing: 0.8px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.35);
+}
+
+.start-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  flex-shrink: 0;
+}
+
+.start-pill__icon {
+  font-size: 9px;
+  opacity: 0.85;
 }
 </style>
