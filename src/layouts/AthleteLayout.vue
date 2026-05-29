@@ -25,17 +25,24 @@
         <router-view />
       </q-page-container>
 
-      <q-footer class="athlete-footer" :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'">
-        <q-tabs
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-          class="athlete-tabs"
-        >
-          <q-route-tab to="/athlete/home" icon="fas fa-house" label="Início" exact />
-          <q-route-tab to="/athlete/progress" icon="fas fa-trophy" label="Conquistas" exact />
-          <q-route-tab to="/athlete/profile" icon="fas fa-user" label="Perfil" exact />
-        </q-tabs>
+      <q-footer class="fnav-footer">
+        <nav class="fnav">
+          <router-link
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
+            custom
+            v-slot="{ isExactActive, navigate }"
+          >
+            <button
+              class="fnav__btn"
+              :class="{ 'fnav__btn--active': isExactActive }"
+              @click="navigate"
+            >
+              <i :class="item.icon" />
+            </button>
+          </router-link>
+        </nav>
       </q-footer>
     </q-layout>
   </div>
@@ -49,6 +56,12 @@ import { useAuthStore } from 'src/stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 const $q = useQuasar()
+
+const navItems = [
+  { to: '/athlete/home', icon: 'fas fa-house' },
+  { to: '/athlete/progress', icon: 'fas fa-trophy' },
+  { to: '/athlete/profile', icon: 'fas fa-user' },
+]
 
 function toggleTheme() {
   $q.dark.toggle()
@@ -70,13 +83,85 @@ function handleLogout() {
 </script>
 
 <style>
-.athlete-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+/* ── Footer shell ── */
+.fnav-footer {
+  background: transparent !important;
+  padding: 10px 24px calc(10px + env(safe-area-inset-bottom));
+  box-shadow: none !important;
 }
-.athlete-tabs .q-tab {
-  color: rgba(255, 255, 255, 0.4) !important;
+
+/* ── Nav row: sem background, só espaçamento ── */
+.fnav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: fit-content;
+  margin: 0 auto;
 }
-.athlete-tabs .q-tab--active {
-  color: var(--q-primary) !important;
+
+/* ── Nav button: mesmo estilo do ios-glass-btn ── */
+.fnav__btn {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  color: rgba(255, 255, 255, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 17px;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fnav__btn:active {
+  transform: scale(0.86);
+  transition: transform 0.1s ease;
+}
+
+/* ── Active state ── */
+.fnav__btn--active {
+  background: var(--q-primary);
+  color: white;
+  transform: scale(1.06);
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.06),
+    0 6px 24px color-mix(in srgb, var(--q-primary) 55%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ── Light theme overrides ── */
+body.body--light .fnav__btn {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.80) 0%,
+    rgba(255, 255, 255, 0.55) 100%
+  );
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  color: rgba(0, 0, 0, 0.45);
+}
+
+body.body--light .fnav__btn--active {
+  background: var(--q-primary);
+  color: white;
+  box-shadow:
+    0 0 0 4px rgba(0, 0, 0, 0.04),
+    0 6px 24px color-mix(in srgb, var(--q-primary) 45%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 </style>

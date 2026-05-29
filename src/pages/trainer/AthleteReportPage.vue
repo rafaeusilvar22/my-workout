@@ -304,7 +304,7 @@ const measurementsChartOptions = {
   chart: { type: 'line', toolbar: { show: false }, zoom: { enabled: false }, background: 'transparent', foreColor: 'rgba(255,255,255,0.7)' },
   theme: { mode: 'dark' },
   stroke: { curve: 'smooth', width: 2 },
-  colors: ['#00E676', '#00D4FF', '#FF6B00'],
+  colors: ['#818CF8', '#00D4FF', '#FF6B00'],
   xaxis: { type: 'datetime' },
   yaxis: [
     { title: { text: 'kg' }, decimalsInFloat: 1 },
@@ -340,7 +340,7 @@ const weeklyFrequency = computed(() => {
 const frequencyChartOptions = computed(() => ({
   chart: { type: 'bar', toolbar: { show: false }, background: 'transparent', foreColor: 'rgba(255,255,255,0.7)' },
   theme: { mode: 'dark' },
-  colors: ['#00E676'],
+  colors: ['#818CF8'],
   xaxis: { categories: weeklyFrequency.value.map((_, i) => `Sem ${i + 1}`) },
   yaxis: { min: 0, decimalsInFloat: 0, title: { text: 'Sessões' } },
   grid: { borderColor: 'rgba(255,255,255,0.08)' },
@@ -374,7 +374,7 @@ const progressChartOptions = {
   chart: { type: 'line', toolbar: { show: false }, zoom: { enabled: false }, background: 'transparent', foreColor: 'rgba(255,255,255,0.7)' },
   theme: { mode: 'dark' },
   stroke: { curve: 'smooth', width: 2 },
-  colors: ['#00E676'],
+  colors: ['#818CF8'],
   xaxis: { type: 'datetime' },
   yaxis: { title: { text: 'kg' }, decimalsInFloat: 1 },
   grid: { borderColor: 'rgba(255,255,255,0.08)' },

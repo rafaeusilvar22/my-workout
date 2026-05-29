@@ -625,13 +625,13 @@ onUnmounted(() => clearInterval(timer))
 }
 
 .finish-btn--partial {
-  background: rgba(76, 175, 80, 0.15);
-  border-color: rgba(76, 175, 80, 0.28);
-  color: #81c784;
+  background: rgba(52, 211, 153, 0.15);
+  border-color: rgba(52, 211, 153, 0.28);
+  color: #6ee7b7;
 }
 
 .finish-btn--ready {
-  background: linear-gradient(145deg, rgba(76, 175, 80, 0.92), rgba(46, 125, 50, 0.96));
+  background: linear-gradient(145deg, rgba(52, 211, 153, 0.88), rgba(16, 185, 129, 0.92));
   border-color: rgba(255, 255, 255, 0.18);
   color: white;
   animation: finish-glow 2.2s ease-in-out infinite;
@@ -653,10 +653,10 @@ onUnmounted(() => clearInterval(timer))
 
 @keyframes finish-glow {
   0%, 100% {
-    box-shadow: 0 8px 32px rgba(76, 175, 80, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(52, 211, 153, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   50% {
-    box-shadow: 0 8px 42px rgba(76, 175, 80, 0.65), 0 0 0 5px rgba(76, 175, 80, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 42px rgba(52, 211, 153, 0.65), 0 0 0 5px rgba(52, 211, 153, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 }
 

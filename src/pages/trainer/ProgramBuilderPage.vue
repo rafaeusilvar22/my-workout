@@ -350,7 +350,7 @@ const selectedPhase = ref(null)
 const splitForm = ref({ name: '', description: '', color: '#1976d2' })
 
 const colorOptions = [
-  '#00D4FF', '#00E676', '#FF6B00', '#FF4757',
+  '#00D4FF', '#818CF8', '#FF6B00', '#FF4757',
   '#7C4DFF', '#FFD32A', '#FF6B9D', '#00BCD4',
 ]
 

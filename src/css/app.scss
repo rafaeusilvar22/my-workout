@@ -80,18 +80,18 @@ body.body--light .avatar-glass {
 
   // Metric chips (pastel backgrounds → dark tint)
   .bg-blue-1   { background: rgba(0, 212, 255, 0.12) !important; }
-  .bg-green-1  { background: rgba(0, 230, 118, 0.12) !important; }
+  .bg-green-1  { background: rgba(52, 211, 153, 0.12) !important; }
   .bg-orange-1 { background: rgba(255, 107, 0, 0.12) !important; }
   .bg-purple-1 { background: rgba(156, 39, 176, 0.12) !important; }
   .bg-red-1    { background: rgba(255, 71, 87, 0.12) !important; }
   .text-blue-9   { color: #00d4ff !important; }
-  .text-green-9  { color: #00e676 !important; }
+  .text-green-9  { color: #34D399 !important; }
   .text-orange-9 { color: #ff6b00 !important; }
   .text-purple-9 { color: #ce93d8 !important; }
   .text-red-8    { color: #ff4757 !important; }
 
   // Drag ghost
-  .drag-ghost { background: rgba(0, 230, 118, 0.1) !important; }
+  .drag-ghost { background: rgba(52, 211, 153, 0.1) !important; }
 
   // Expansion item header class used in ProgramBuilder
   .bg-dark-elevated { background: #1a1a2c; }
